@@ -13,15 +13,8 @@
   ],
   "routes": [
     {
-      "src": "(.*)",
-      "dest": "src/main.js",
-      "methods": [
-        "GET",
-        "POST",
-        "PUT",
-        "PATCH",
-        "DELETE"
-      ]
+      "source": "(.*)",
+      "destination": "src/main.js"
     }
   ]
 }
