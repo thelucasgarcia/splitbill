@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "env": {
+    "DATABASE_URL": "file:dev.db",
+    "JWT_SECRET": "teste",
+    "EXPIRES_IN": "8h"
+  },
+  "builds": [
+    {
+      "src": "src/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "(.*)",
+      "dest": "src/main.js",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ]
+    }
+  ]
+}
