@@ -13,8 +13,8 @@
   ],
   "routes": [
     {
-      "source": "(.*)",
-      "destination": "src/main.js"
+      "src": "(.*)",
+      "dest": "src/main.js"
     }
   ]
 }
