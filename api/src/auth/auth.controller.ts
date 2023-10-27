@@ -1,15 +1,33 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from '../app/dto/auth/register.dto';
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guard/refresh.guard';
+import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 
 @ApiTags('Auth')
 @Controller('/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('attemp')
+  async validUsername(@Query() query: ValidUsernameParamDto) {
+    if (query.username) {
+      return await this.authService.attemp(query);
+    }
+    throw new NotFoundException();
+  }
 
   @Post('signin')
   async signin(@Body() param: LoginAuthDto) {

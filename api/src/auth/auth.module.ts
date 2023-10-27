@@ -10,6 +10,7 @@ import { RefreshStrategy } from './strategies/refresh.strategy';
 import { LoginAuth } from 'src/app/use-cases/auth/login.auth';
 import { RegisterAuth } from 'src/app/use-cases/auth/register.auth';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
+import { ValidUsername } from 'src/app/use-cases/auth/attemp.auth';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
     LoginAuth,
     RegisterAuth,
     FindOneUser,
+    ValidUsername,
   ],
 })
 export class AuthModule {}

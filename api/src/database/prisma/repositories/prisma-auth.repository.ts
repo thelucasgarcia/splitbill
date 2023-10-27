@@ -22,9 +22,19 @@ export class PrismaAuthRepository implements AuthRepository {
       where: { email: param.email },
     });
 
-    const validatePassword = bcrypt.compareSync(param.password, user.password);
+    if (!user) {
+      throw new BadRequestException({
+        code: 'INVALID_EMAIL_PASSWORD',
+        message: AuthExceptionEnum.INVALID_EMAIL_PASSWORD,
+      });
+    }
 
-    if (!user || !validatePassword) {
+    const validatePassword = bcrypt.compareSync(
+      param?.password,
+      user?.password,
+    );
+
+    if (!validatePassword) {
       throw new BadRequestException({
         code: 'INVALID_EMAIL_PASSWORD',
         message: AuthExceptionEnum.INVALID_EMAIL_PASSWORD,

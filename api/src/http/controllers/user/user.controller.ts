@@ -2,35 +2,30 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/app/dto/user/create-user.dto';
 import { EditUserDto, EditUserParamDto } from 'src/app/dto/user/edit-user.dto';
 import { FindOneUserParamDto } from 'src/app/dto/user/find-one-param.dto';
-import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 import { CreateUser } from 'src/app/use-cases/user/create-user';
 import { EditUser } from 'src/app/use-cases/user/edit-user';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
 import { GetAllUsers } from 'src/app/use-cases/user/get-all-users';
-import { ValidUsername } from 'src/app/use-cases/user/valid-username';
 import { JwtAuthGuard } from 'src/auth/guard/auth.guard';
 import { UserViewModel } from '../../view-models/user.view-model';
 
 @ApiBearerAuth()
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard)
-@Controller('v1/account')
+@Controller('v1/users')
 export class UserController {
   constructor(
     private readonly useGetAllUsers: GetAllUsers,
     private readonly useFindOneUser: FindOneUser,
-    private readonly useValidUsername: ValidUsername,
     private readonly useCreateUser: CreateUser,
     private readonly useEditUser: EditUser,
   ) {}
@@ -45,14 +40,6 @@ export class UserController {
   async findAll() {
     const response = await this.useGetAllUsers.execute();
     return response.map(UserViewModel.toHTTP);
-  }
-
-  @Get('attemp')
-  async validUsername(@Query() query: ValidUsernameParamDto) {
-    if (query.username) {
-      return await this.useValidUsername.execute(query);
-    }
-    throw new NotFoundException();
   }
 
   @Get(':id')

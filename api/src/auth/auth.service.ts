@@ -2,10 +2,13 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from 'src/app/dto/auth/register.dto';
+import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
+import { ValidUsername } from 'src/app/use-cases/auth/attemp.auth';
 import { LoginAuth } from 'src/app/use-cases/auth/login.auth';
 import { RegisterAuth } from 'src/app/use-cases/auth/register.auth';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
+
 import { AuthExceptionEnum } from 'src/lib/enums/auth.exception.enum';
 
 @Injectable()
@@ -14,6 +17,7 @@ export class AuthService {
     private readonly useLoginAuth: LoginAuth,
     private readonly useRegisterAuth: RegisterAuth,
     private readonly useFindOneUser: FindOneUser,
+    private readonly useValidUsername: ValidUsername,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -25,6 +29,10 @@ export class AuthService {
   async signUp(param: RegisterAuthDto) {
     const user = await this.useRegisterAuth.execute(param);
     return this.generateTokens(user);
+  }
+
+  async attemp(param: ValidUsernameParamDto) {
+    return await this.useValidUsername.execute(param);
   }
 
   async refreshToken(token: string, id: string) {
