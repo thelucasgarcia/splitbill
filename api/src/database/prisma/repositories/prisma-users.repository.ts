@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -27,16 +28,18 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async findById(id: string): Promise<UserEntity | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-
-    if (!user) {
-      throw new NotFoundException({
-        code: 'USER_NOT_FOUND',
-        message: UserExceptionEnum.USER_NOT_FOUND,
-      });
+    try {
+      const user = await this.prisma.user.findUnique({ where: { id } });
+      if (!user) {
+        throw new NotFoundException({
+          code: 'USER_NOT_FOUND',
+          message: UserExceptionEnum.USER_NOT_FOUND,
+        });
+      }
+      return PrismaUserMapper.toDomain(user);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-
-    return PrismaUserMapper.toDomain(user);
   }
 
   async create(user: CreateUserDto): Promise<UserEntity> {

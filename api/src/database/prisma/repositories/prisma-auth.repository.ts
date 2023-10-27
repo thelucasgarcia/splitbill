@@ -3,7 +3,7 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from 'src/app/dto/auth/register.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
@@ -22,19 +22,9 @@ export class PrismaAuthRepository implements AuthRepository {
       where: { email: param.email },
     });
 
-    if (!user) {
-      throw new BadRequestException({
-        code: 'INVALID_EMAIL_PASSWORD',
-        message: AuthExceptionEnum.INVALID_EMAIL_PASSWORD,
-      });
-    }
+    const validatePassword = bcrypt.compareSync(param.password, user.password);
 
-    const validatePassword = await bcrypt.compare(
-      param.password,
-      user.password,
-    );
-
-    if (!validatePassword) {
+    if (!user || !validatePassword) {
       throw new BadRequestException({
         code: 'INVALID_EMAIL_PASSWORD',
         message: AuthExceptionEnum.INVALID_EMAIL_PASSWORD,

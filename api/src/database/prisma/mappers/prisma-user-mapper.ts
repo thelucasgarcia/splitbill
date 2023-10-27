@@ -1,6 +1,6 @@
 import { User as RawUser, User } from '@prisma/client';
 import { UserEntity } from 'src/app/entities/user.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { removeSpecialCaracters } from 'src/lib/helpers/removeSpecialCaracters';
 export class PrismaUserMapper {
   static toPrisma(user: UserEntity): User {

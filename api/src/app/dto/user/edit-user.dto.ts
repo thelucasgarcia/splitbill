@@ -26,9 +26,10 @@ export class EditUserDto {
   @ApiProperty()
   readonly name: string;
 
-  @IsCPF()
+  @IsString()
   @IsNotEmpty()
   @IsOptional()
+  @IsCPF()
   @ApiProperty()
   readonly cpf: string;
 

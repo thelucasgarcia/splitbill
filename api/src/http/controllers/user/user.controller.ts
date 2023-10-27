@@ -25,7 +25,7 @@ import { UserViewModel } from '../../view-models/user.view-model';
 @ApiBearerAuth()
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard)
-@Controller('v1/user')
+@Controller('v1/account')
 export class UserController {
   constructor(
     private readonly useGetAllUsers: GetAllUsers,

@@ -6,7 +6,10 @@ import { DatabaseModule } from 'src/database/database.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
+import { RefreshStrategy } from './strategies/refresh.strategy';
+import { LoginAuth } from 'src/app/use-cases/auth/login.auth';
+import { RegisterAuth } from 'src/app/use-cases/auth/register.auth';
+import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
 
 @Module({
   imports: [
@@ -15,12 +18,17 @@ import { LocalStrategy } from './strategies/local.strategy';
     PassportModule,
     JwtModule.register({
       privateKey: process.env.JWT_SECRET,
-      signOptions: {
-        expiresIn: process.env.EXPIRES_IN,
-      },
+      publicKey: process.env.JWT_REFRESH_SECRET,
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    RefreshStrategy,
+    LoginAuth,
+    RegisterAuth,
+    FindOneUser,
+  ],
 })
 export class AuthModule {}
