@@ -14,6 +14,7 @@ export class PrismaUserMapper {
       phone: removeSpecialCaracters(user?.phone),
       createdAt: user?.createdAt,
       updatedAt: user?.updatedAt,
+      deletedAt: user?.deletedAt,
     };
   }
 

@@ -9,6 +9,7 @@ export interface UserProps {
   phone?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  deletedAt?: Date;
 }
 
 export class UserEntity {
@@ -84,5 +85,13 @@ export class UserEntity {
 
   public get updatedAt(): Date {
     return this.props.updatedAt;
+  }
+
+  public set deletedAt(deletedAt: Date) {
+    this.props.deletedAt = deletedAt;
+  }
+
+  public get deletedAt(): Date {
+    return this.props.deletedAt;
   }
 }
