@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '.pnpm/@nestjs+testing@10.0.0_@nestjs+common@10.0.0_@nestjs+core@10.0.0_@nestjs+platform-express@10.0.0/node_modules/@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 
 describe('UserController', () => {
