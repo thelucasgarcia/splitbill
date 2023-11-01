@@ -1,20 +1,20 @@
-import { User as RawUser, User } from '@prisma/client';
+import { User as RawUser } from '@prisma/client';
 import { UserEntity } from 'src/app/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { removeSpecialCaracters } from 'src/lib/helpers/removeSpecialCaracters';
 export class PrismaUserMapper {
-  static toPrisma(user: UserEntity): User {
+  static toPrisma(data: UserEntity): RawUser {
     return {
-      id: user?.id,
-      name: user?.name,
-      password: user?.password && bcrypt.hashSync(user?.password, 10),
-      username: user?.username,
-      email: user?.email,
-      cpf: removeSpecialCaracters(user?.cpf),
-      phone: removeSpecialCaracters(user?.phone),
-      createdAt: user?.createdAt,
-      updatedAt: user?.updatedAt,
-      deletedAt: user?.deletedAt,
+      id: data?.id,
+      name: data?.name,
+      password: data?.password && bcrypt.hashSync(data?.password, 10),
+      username: data?.username,
+      email: data?.email,
+      cpf: removeSpecialCaracters(data?.cpf),
+      phone: removeSpecialCaracters(data?.phone),
+      createdAt: data?.createdAt,
+      updatedAt: data?.updatedAt,
+      deletedAt: data?.deletedAt,
     };
   }
 

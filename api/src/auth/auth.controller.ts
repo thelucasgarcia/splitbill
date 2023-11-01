@@ -17,17 +17,9 @@ import { JwtRefreshGuard } from './guard/refresh.guard';
 import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 
 @ApiTags('Auth')
-@Controller('/v1/auth')
+@Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @Get('attemp')
-  async validUsername(@Query() query: ValidUsernameParamDto) {
-    if (query.username) {
-      return await this.authService.attemp(query);
-    }
-    throw new NotFoundException();
-  }
 
   @Post('signin')
   async signin(@Body() param: LoginAuthDto) {
@@ -47,5 +39,13 @@ export class AuthController {
       user['refreshToken'],
       user['id'],
     );
+  }
+
+  @Get('attemp')
+  async validUsername(@Query() query: ValidUsernameParamDto) {
+    if (query.username) {
+      return await this.authService.attemp(query);
+    }
+    throw new NotFoundException();
   }
 }

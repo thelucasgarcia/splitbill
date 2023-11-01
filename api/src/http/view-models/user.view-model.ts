@@ -1,16 +1,16 @@
 import { UserEntity } from 'src/app/entities/user.entity';
 
 export class UserViewModel {
-  static toHTTP(user: UserEntity) {
+  static toHTTP(data: UserEntity) {
     return {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      cpf: user.cpf,
-      phone: user.phone,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      id: data.id,
+      name: data.name,
+      username: data.username,
+      email: data.email,
+      cpf: data.cpf,
+      phone: data.phone,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
   }
 }

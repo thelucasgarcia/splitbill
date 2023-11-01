@@ -4,18 +4,10 @@ import {
   IsNumberString,
   IsOptional,
   IsString,
-  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { IsCPF } from 'src/lib/validator/isCpf.validator';
-
-export class EditUserParamDto {
-  @IsUUID()
-  @IsNotEmpty()
-  @ApiProperty()
-  id: string;
-}
 
 export class EditUserDto {
   @IsString()

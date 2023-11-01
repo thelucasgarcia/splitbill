@@ -8,9 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FindOneParamDto } from 'src/app/dto/common/find-one-param.dto';
 import { CreateUserDto } from 'src/app/dto/user/create-user.dto';
-import { EditUserDto, EditUserParamDto } from 'src/app/dto/user/edit-user.dto';
-import { FindOneUserParamDto } from 'src/app/dto/user/find-one-param.dto';
+import { EditUserDto } from 'src/app/dto/user/edit-user.dto';
 import { CreateUser } from 'src/app/use-cases/user/create-user';
 import { EditUser } from 'src/app/use-cases/user/edit-user';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
@@ -21,7 +21,7 @@ import { UserViewModel } from '../../view-models/user.view-model';
 @ApiBearerAuth()
 @ApiTags('Users')
 @UseGuards(JwtAuthGuard)
-@Controller('v1/users')
+@Controller('users')
 export class UserController {
   constructor(
     private readonly useGetAllUsers: GetAllUsers,
@@ -43,13 +43,13 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param() param: FindOneUserParamDto) {
+  async findOne(@Param() param: FindOneParamDto) {
     const response = await this.useFindOneUser.execute(param);
     return UserViewModel.toHTTP(response);
   }
 
   @Patch(':id')
-  async update(@Param() param: EditUserParamDto, @Body() body: EditUserDto) {
+  async update(@Param() param: FindOneParamDto, @Body() body: EditUserDto) {
     const response = await this.useEditUser.execute(param, body);
     return UserViewModel.toHTTP(response);
   }

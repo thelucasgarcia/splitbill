@@ -1,18 +1,20 @@
-import { Bill } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { UserEntity } from './user.entity';
 
 export interface BillProps {
-  id: string;
-  name: string;
-  tag: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
+  id?: string;
+  name?: string;
+  tag?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+  userId?: string;
+  user?: UserEntity;
 }
 
 export class BillEntity {
   private _id: string;
-  private props: Bill;
+  private props: BillProps;
 
   constructor(props: BillProps, id?: string) {
     this._id = id ?? randomUUID();
@@ -23,12 +25,28 @@ export class BillEntity {
     return this._id;
   }
 
-  public set name(name: string) {
-    this.props.name = name;
+  public get userId(): string {
+    return this.props.userId;
+  }
+
+  public set userId(userId: string) {
+    this.props.userId = userId;
+  }
+
+  public get user(): UserEntity {
+    return this.props.user;
+  }
+
+  public set user(user: UserEntity) {
+    this.props.user = user;
   }
 
   public get name(): string {
     return this.props.name;
+  }
+
+  public set name(name: string) {
+    this.props.name = name;
   }
 
   public set tag(tag: string[]) {
