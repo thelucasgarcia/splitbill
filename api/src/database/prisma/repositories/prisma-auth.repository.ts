@@ -8,8 +8,8 @@ import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from 'src/app/dto/auth/register.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
 import { AuthRepository } from 'src/app/repositories/auth.repository';
-import { AuthExceptionEnum } from 'src/lib/enums/auth.exception.enum';
-import { UserExceptionEnum } from 'src/lib/enums/user.exception.enum';
+import { AuthExceptionEnum } from 'src/lib/exceptions/auth.exception.enum';
+import { UserExceptionEnum } from 'src/lib/exceptions/user.exception.enum';
 import { PrismaUserMapper } from '../mappers/prisma-user-mapper';
 import { PrismaService } from '../prisma.service';
 

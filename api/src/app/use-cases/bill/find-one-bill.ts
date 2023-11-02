@@ -5,9 +5,9 @@ import { BillRepository } from 'src/app/repositories/bill.repository';
 
 @Injectable()
 export class FindOneBill {
-  constructor(private billsRepository: BillRepository) {}
+  constructor(private repository: BillRepository) {}
 
   async execute({ id }: FindOneParamDto): Promise<BillEntity> {
-    return await this.billsRepository.findById(id);
+    return await this.repository.findById(id);
   }
 }

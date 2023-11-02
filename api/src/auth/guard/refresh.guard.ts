@@ -1,7 +1,7 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import { AuthExceptionEnum } from 'src/lib/enums/auth.exception.enum';
+import { AuthExceptionEnum } from 'src/lib/exceptions/auth.exception.enum';
 
 export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
   canActivate(

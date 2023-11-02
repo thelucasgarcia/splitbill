@@ -15,5 +15,5 @@ export abstract class BillRepository {
     id: FindOneParamDto,
     editBill: EditBillDto,
   ): Promise<BillEntity>;
-  abstract delete(id: BillEntity['id']): Promise<void>;
+  abstract delete(id: BillEntity['id']): Promise<BillEntity>;
 }

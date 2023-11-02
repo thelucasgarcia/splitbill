@@ -23,4 +23,10 @@ export class CreateBillDto {
   @MaxLength(30, { each: true })
   @ApiProperty()
   readonly tag: string[];
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(500)
+  @ApiProperty()
+  readonly description: string;
 }

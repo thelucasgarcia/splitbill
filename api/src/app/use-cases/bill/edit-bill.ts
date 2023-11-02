@@ -6,12 +6,12 @@ import { BillRepository } from 'src/app/repositories/bill.repository';
 
 @Injectable()
 export class EditBill {
-  constructor(private billRepository: BillRepository) {}
+  constructor(private repository: BillRepository) {}
 
   async execute(
     param: FindOneParamDto,
     body: EditBillDto,
   ): Promise<BillEntity> {
-    return await this.billRepository.update(param, body);
+    return await this.repository.update(param, body);
   }
 }

@@ -29,7 +29,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.enableCors();
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('/v1');
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(3333);

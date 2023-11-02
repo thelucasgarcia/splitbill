@@ -4,9 +4,9 @@ import { UsersRepository } from 'src/app/repositories/users.repository';
 
 @Injectable()
 export class ValidUsername {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(private repository: UsersRepository) {}
 
   async execute({ username }: ValidUsernameParamDto): Promise<boolean> {
-    return await this.usersRepository.validUsername(username);
+    return await this.repository.validUsername(username);
   }
 }

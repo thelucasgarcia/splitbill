@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
-  IsNotEmpty,
+  IsBoolean,
   IsOptional,
   IsString,
   MaxLength,
@@ -10,7 +10,7 @@ import {
 
 export class EditBillDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(3)
   @MaxLength(255)
   @ApiProperty()
@@ -23,4 +23,20 @@ export class EditBillDto {
   @MaxLength(30, { each: true })
   @ApiProperty()
   readonly tag: string[];
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(500)
+  @ApiProperty()
+  readonly description: string;
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty()
+  readonly editValues: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty()
+  readonly inviteMembers: boolean;
 }

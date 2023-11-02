@@ -5,9 +5,9 @@ import { UserEntity } from '../../entities/user.entity';
 
 @Injectable()
 export class RegisterAuth {
-  constructor(private authRepository: AuthRepository) {}
+  constructor(private repository: AuthRepository) {}
 
   async execute(user: RegisterAuthDto): Promise<UserEntity> {
-    return await this.authRepository.register(user);
+    return await this.repository.register(user);
   }
 }

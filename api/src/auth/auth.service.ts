@@ -9,7 +9,7 @@ import { LoginAuth } from 'src/app/use-cases/auth/login.auth';
 import { RegisterAuth } from 'src/app/use-cases/auth/register.auth';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
 
-import { AuthExceptionEnum } from 'src/lib/enums/auth.exception.enum';
+import { AuthExceptionEnum } from 'src/lib/exceptions/auth.exception.enum';
 
 @Injectable()
 export class AuthService {

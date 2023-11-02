@@ -12,37 +12,71 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  name      String
-  username  String    @unique
-  email     String    @unique
-  password  String
-  cpf       String?   @unique
-  phone     String?   @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  bills     Bill[]
+  id         String       @id @default(uuid())
+  name       String
+  username   String       @unique
+  email      String       @unique
+  password   String
+  cpf        String?      @unique
+  phone      String?      @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
+  bill       Bill[]
+  billMember BillMember[]
 }
 
 model Bill {
-  id        String        @id @default(uuid())
-  name      String
-  tag       String[]
-  userId    String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  deletedAt DateTime?
-  settings  BillSettings?
-}
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  tag         String[]
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model BillSettings {
-  id            String  @id @default(uuid())
-  billId        String  @unique
-  description   String?
   editValues    Boolean @default(false)
   inviteMembers Boolean @default(false)
 
-  bill Bill @relation(fields: [billId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  items   BillItem[]
+  members BillMember[]
+}
+
+model BillItem {
+  id     String @id @default(uuid())
+  billId String
+  bill   Bill   @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+  name     String
+  quantity Int     @default(0)
+  price    Decimal @default(0) @db.Money
+
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  members   BillMemberItem[]
+}
+
+model BillMember {
+  id       String           @unique @default(uuid())
+  billId   String
+  bill     Bill             @relation(fields: [billId], references: [id], onDelete: Cascade)
+  memberId String
+  member   User             @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  items    BillMemberItem[]
+
+  @@id([id, memberId, billId])
+  @@unique([memberId, billId])
+}
+
+model BillMemberItem {
+  itemId String
+  item   BillItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  memberId String
+  member   BillMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@id([memberId, itemId])
 }

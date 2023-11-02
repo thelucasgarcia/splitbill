@@ -4,9 +4,9 @@ import { BillRepository } from 'src/app/repositories/bill.repository';
 
 @Injectable()
 export class GetAllBills {
-  constructor(private billRepository: BillRepository) {}
+  constructor(private repository: BillRepository) {}
 
   async execute(): Promise<BillEntity[]> {
-    return await this.billRepository.findAll();
+    return await this.repository.findAll();
   }
 }
