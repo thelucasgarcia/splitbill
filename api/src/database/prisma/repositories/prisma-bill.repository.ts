@@ -54,27 +54,23 @@ export class PrismaBillRepository implements BillRepository {
   }
 
   async findById(id: string): Promise<BillEntity | null> {
-    try {
-      const bill = await this.prisma.bill.findUnique({
-        where: { id },
-        include: {
-          user: this.includeUser,
-          items: true,
-          members: this.includeMembers,
-        },
+    const bill = await this.prisma.bill.findUnique({
+      where: { id },
+      include: {
+        user: this.includeUser,
+        items: true,
+        members: this.includeMembers,
+      },
+    });
+
+    if (!bill) {
+      throw new NotFoundException({
+        code: 'BILL_NOT_FOUND',
+        message: BillExceptionEnum.BILL_NOT_FOUND,
       });
-
-      if (!bill) {
-        throw new NotFoundException({
-          code: 'BILL_NOT_FOUND',
-          message: BillExceptionEnum.BILL_NOT_FOUND,
-        });
-      }
-
-      return PrismaBillMapper.toDomain(bill);
-    } catch (error) {
-      throw new HttpException(error.response, error.status);
     }
+
+    return PrismaBillMapper.toDomain(bill);
   }
 
   async create(bill: CreateBillDto, userId: string): Promise<BillEntity> {

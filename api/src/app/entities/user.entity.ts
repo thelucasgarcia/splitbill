@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto';
 export interface UserProps {
   name?: string;
   email?: string;
+  picture?: string;
   password?: string;
   username?: string;
   cpf?: string;
@@ -31,6 +32,14 @@ export class UserEntity {
 
   public get name(): string {
     return this.props.name;
+  }
+
+  public get picture(): string {
+    return this.props.picture;
+  }
+
+  public set picture(value: string) {
+    this.props.picture = value;
   }
 
   public set username(username: string) {

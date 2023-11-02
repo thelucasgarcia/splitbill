@@ -89,6 +89,7 @@ export class PrismaUsersRepository implements UsersRepository {
         name: user.name || currentUser.name,
         cpf: currentUser?.cpf || user?.cpf,
         phone: currentUser?.phone || user?.phone,
+        picture: currentUser?.picture || user?.picture,
       };
 
       if (editUser.phone) {

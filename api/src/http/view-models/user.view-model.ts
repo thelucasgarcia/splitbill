@@ -5,6 +5,7 @@ export class UserViewModel {
     return {
       id: data.id,
       name: data.name,
+      picture: data.picture,
       username: data.username,
       email: data.email,
       cpf: data.cpf,

@@ -16,6 +16,7 @@ model User {
   name       String
   username   String       @unique
   email      String       @unique
+  picture    String?
   password   String
   cpf        String?      @unique
   phone      String?      @unique

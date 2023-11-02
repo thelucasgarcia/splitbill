@@ -7,6 +7,7 @@ export class PrismaUserMapper {
     return {
       id: data?.id,
       name: data?.name,
+      picture: data?.picture,
       password: data?.password && bcrypt.hashSync(data?.password, 10),
       username: data?.username,
       email: data?.email,

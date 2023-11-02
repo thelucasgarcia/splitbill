@@ -17,41 +17,37 @@ export class PrismaBillMemberRepository implements BillMemberRepository {
   ) {}
 
   async toggle(data: ToggleBillMemberDto): Promise<BillMemberEntity> {
-    try {
-      const bill = await this.billRepository.findById(data.billId);
-      const user = await this.userRepository.findById(data.memberId);
-      const isUserBill = bill.userId === user.id;
+    const bill = await this.billRepository.findById(data.billId);
+    const user = await this.userRepository.findById(data.memberId);
+    const isUserBill = bill.userId === user.id;
 
-      const hasMember = await this.prisma.billMember.findFirst({
-        where: {
+    const hasMember = await this.prisma.billMember.findFirst({
+      where: {
+        billId: bill.id,
+        memberId: user.id,
+      },
+    });
+
+    if (!hasMember) {
+      const addMember = await this.prisma.billMember.create({
+        data: {
           billId: bill.id,
           memberId: user.id,
         },
       });
 
-      if (!hasMember) {
-        const addMember = await this.prisma.billMember.create({
-          data: {
-            billId: bill.id,
-            memberId: user.id,
-          },
-        });
-
-        return PrismaBillMemberMapper.toDomain(addMember);
-      }
-
-      if (!isUserBill) {
-        const removedMember = await this.prisma.billMember.delete({
-          where: {
-            id: hasMember.id,
-          },
-        });
-        return PrismaBillMemberMapper.toDomain(removedMember);
-      }
-
-      return PrismaBillMemberMapper.toDomain(hasMember);
-    } catch (error) {
-      throw new HttpException(error.response, error.status);
+      return PrismaBillMemberMapper.toDomain(addMember);
     }
+
+    if (!isUserBill) {
+      const removedMember = await this.prisma.billMember.delete({
+        where: {
+          id: hasMember.id,
+        },
+      });
+      return PrismaBillMemberMapper.toDomain(removedMember);
+    }
+
+    return PrismaBillMemberMapper.toDomain(hasMember);
   }
 }

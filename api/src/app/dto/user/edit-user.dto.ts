@@ -21,6 +21,12 @@ export class EditUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
+  @ApiProperty()
+  readonly picture: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
   @IsCPF()
   @ApiProperty()
   readonly cpf: string;
