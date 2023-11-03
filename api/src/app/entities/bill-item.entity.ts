@@ -1,6 +1,13 @@
 import { randomUUID } from 'crypto';
+import { BillMemberItemEntity } from './bill-member-item.entity';
 import { BillEntity } from './bill.entity';
 
+export enum BillType {
+  PERCENTAGE = 'PERCENTAGE',
+  EQUALLY = 'EQUALLY',
+  VALUE = 'VALUE',
+  AMOUNT = 'AMOUNT',
+}
 export interface BillItemProps {
   id?: string;
   billId?: string;
@@ -8,6 +15,9 @@ export interface BillItemProps {
   name?: string;
   quantity?: number;
   price?: number;
+  type?: BillType;
+  total?: number;
+  members?: BillMemberItemEntity[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -31,6 +41,14 @@ export class BillItemEntity {
 
   public set name(name: string) {
     this.props.name = name;
+  }
+
+  public get type(): BillType {
+    return this.props.type;
+  }
+
+  public set type(value: BillType) {
+    this.props.type = value;
   }
 
   public get billId(): string {
@@ -60,6 +78,18 @@ export class BillItemEntity {
   }
   public set price(value: number) {
     this.props.price = value;
+  }
+
+  public get total(): number {
+    return this.props.price * this.props.quantity;
+  }
+
+  public get members(): BillMemberItemEntity[] {
+    return this.props.members;
+  }
+
+  public set members(value: BillMemberItemEntity[]) {
+    this.props.members = value;
   }
 
   public set createdAt(createdAt: Date) {

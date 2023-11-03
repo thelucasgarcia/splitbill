@@ -48,18 +48,49 @@ export class PrismaBillItemRepository implements BillItemRepository {
   async create(data: CreateBillItemDto): Promise<BillItemEntity> {
     try {
       const bill = await this.billRepository.findById(data.billId);
+
+      if (data.participants) {
+        const billMembersId = bill.members.map((el) => el.memberId);
+        data.participants.forEach((el, index) => {
+          const hasMember = billMembersId.includes(el.memberId);
+          console.log(bill.members, billMembersId, hasMember, el.memberId);
+          if (!hasMember) {
+            data.participants.splice(index, 1);
+          }
+        });
+      }
+
+      console.log(data.participants);
+
       const item = await this.prisma.billItem.create({
         data: {
           billId: bill.id,
           name: data.name,
           price: data.price,
           quantity: data.quantity,
+          type: data.type,
+          members: {
+            createMany: {
+              data: [
+                {
+                  id: bill.id,
+                  memberId: '813c6f7b-eaac-4d39-bd19-1e49c8bca063',
+                  percentage: 100,
+                },
+              ],
+            },
+          },
+        },
+        include: {
+          members: true,
         },
       });
 
+      console.log(item);
+
       return PrismaBillItemMapper.toDomain(item);
     } catch (error) {
-      throw new HttpException(error.response, error.status);
+      throw new Error(error);
     }
   }
 

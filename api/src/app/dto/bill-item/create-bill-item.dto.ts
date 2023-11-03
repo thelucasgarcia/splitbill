@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
   IsUUID,
   Max,
@@ -9,7 +12,19 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { BillType } from 'src/app/entities/bill-item.entity';
+class ParticipantDto {
+  @IsUUID()
+  @IsNotEmpty()
+  @ApiProperty()
+  memberId: string;
 
+  @Min(0)
+  @Max(100)
+  @IsNotEmpty()
+  @ApiProperty()
+  percentage: number;
+}
 export class CreateBillItemDto {
   @IsUUID()
   @IsNotEmpty()
@@ -32,6 +47,18 @@ export class CreateBillItemDto {
   @IsNumber()
   @Min(1)
   @Max(10000)
+  @IsNotEmpty()
   @ApiProperty()
   readonly quantity: number;
+
+  @IsEnum(BillType)
+  @IsNotEmpty()
+  @ApiProperty({
+    enum: BillType,
+  })
+  readonly type: BillType;
+
+  @IsArray()
+  @IsObject({ each: true })
+  readonly participants: ParticipantDto[];
 }

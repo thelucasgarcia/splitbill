@@ -9,6 +9,8 @@ export class BillItemViewModel {
       quantity: data.quantity,
       billId: data.billId,
       bill: data.bill,
+      type: data.type,
+      members: data.members,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };

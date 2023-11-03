@@ -30,6 +30,8 @@ export class PrismaBillRepository implements BillRepository {
     {
       select: {
         id: true,
+        billId: true,
+        memberId: true,
         member: {
           select: {
             id: true,
