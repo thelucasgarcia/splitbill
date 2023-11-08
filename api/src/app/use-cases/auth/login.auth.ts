@@ -7,7 +7,7 @@ import { UserEntity } from '../../entities/user.entity';
 export class LoginAuth {
   constructor(private repository: AuthRepository) {}
 
-  async execute(param: LoginAuthDto): Promise<UserEntity> {
-    return await this.repository.login(param);
+  async execute(data: LoginAuthDto): Promise<UserEntity> {
+    return await this.repository.login(data);
   }
 }

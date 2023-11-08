@@ -16,7 +16,7 @@ export class PrismaBillMemberRepository implements BillMemberRepository {
     private readonly userRepository: UsersRepository,
   ) {}
 
-  async toggle(data: ToggleBillMemberDto): Promise<BillMemberEntity> {
+  async toggle(data: ToggleBillMemberDto) {
     const bill = await this.billRepository.findById(data.billId);
     const user = await this.userRepository.findById(data.memberId);
     const isUserBill = bill.userId === user.id;

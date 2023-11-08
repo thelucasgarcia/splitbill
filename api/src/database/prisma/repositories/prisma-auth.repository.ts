@@ -14,7 +14,7 @@ import { PrismaService } from '../prisma.service';
 export class PrismaAuthRepository implements AuthRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async login(param: LoginAuthDto): Promise<UserEntity | null> {
+  async login(param: LoginAuthDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: param.email },
     });
@@ -35,7 +35,7 @@ export class PrismaAuthRepository implements AuthRepository {
     return PrismaUserMapper.toDomain(user);
   }
 
-  async register(user: RegisterAuthDto): Promise<UserEntity> {
+  async register(user: RegisterAuthDto) {
     const createdUser = await this.prisma.$transaction(async (ctx) => {
       const hasEmail = await ctx.user.findUnique({
         where: { email: user.email },

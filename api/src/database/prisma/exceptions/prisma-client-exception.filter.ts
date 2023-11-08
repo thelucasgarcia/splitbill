@@ -9,7 +9,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const message = exception.message.replace(/\n/g, '');
+    // const message = exception.message.replace(/\n/g, '');
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     switch (exception.code) {
       case 'P1000': {
@@ -36,7 +36,6 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
           exception.code,
           status,
           exception.meta.cause as string,
-          message,
         ),
       );
   }

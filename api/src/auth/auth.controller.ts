@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Post,
   Query,
   Req,
@@ -10,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { AttemptRegisterDto } from 'src/app/dto/auth/attempt.dto';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from '../app/dto/auth/register.dto';
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './guard/refresh.guard';
-import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 
 @ApiTags('Auth')
 @Controller('/auth')
@@ -41,11 +40,8 @@ export class AuthController {
     );
   }
 
-  @Get('attemp')
-  async validUsername(@Query() query: ValidUsernameParamDto) {
-    if (query.username) {
-      return await this.authService.attemp(query);
-    }
-    throw new NotFoundException();
+  @Get('attempt')
+  async validUsername(@Query() query: AttemptRegisterDto) {
+    return await this.authService.attempt(query);
   }
 }

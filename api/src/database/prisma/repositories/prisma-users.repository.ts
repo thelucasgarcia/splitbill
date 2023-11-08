@@ -1,44 +1,69 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { AttemptRegisterDto } from 'src/app/dto/auth/attempt.dto';
 import { CreateUserDto } from 'src/app/dto/user/create-user.dto';
 import { EditUserDto } from 'src/app/dto/user/edit-user.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
-import { UsersRepository } from 'src/app/repositories/users.repository';
 import { UserCpfIsTakenException } from 'src/app/exceptions/user/user-cpf-is-taken.exception';
 import { UserEmailIsTakenException } from 'src/app/exceptions/user/user-email-is-taken.exception';
 import { UserNotFoundException } from 'src/app/exceptions/user/user-not-found.exception';
 import { UserPhoneIsTakenException } from 'src/app/exceptions/user/user-phone-is-taken.exception';
 import { UserUsernameIsTakenException } from 'src/app/exceptions/user/user-username-is-taken.exception';
+import { UsersRepository } from 'src/app/repositories/users.repository';
 import { PrismaUserMapper } from '../mappers/prisma-user-mapper';
 import { PrismaService } from '../prisma.service';
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<UserEntity[]> {
+  async findAll() {
     const users = await this.prisma.user.findMany();
     return users.map(PrismaUserMapper.toDomain);
   }
 
-  async validUsername(username: string): Promise<boolean> {
-    const user = await this.prisma.user.count({
-      where: { username: username.toLowerCase() },
-    });
-    return !Boolean(user);
-  }
+  async attempt(data: AttemptRegisterDto) {
+    const result = {
+      email: true,
+      username: true,
+      cpf: true,
+      phone: true,
+    };
 
-  async findById(id: string): Promise<UserEntity | null> {
-    try {
-      const user = await this.prisma.user.findUnique({ where: { id } });
-      if (!user) {
-        throw new UserNotFoundException();
-      }
-      return PrismaUserMapper.toDomain(user);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
+    if (data.email) {
+      result['email'] = Boolean(
+        await this.prisma.user.count({ where: { email: data.email } }),
+      );
     }
+
+    if (data.username) {
+      result['username'] = Boolean(
+        await this.prisma.user.count({ where: { username: data.username } }),
+      );
+    }
+
+    if (data.cpf) {
+      result['cpf'] = Boolean(
+        await this.prisma.user.count({ where: { cpf: data.cpf } }),
+      );
+    }
+
+    if (data.phone) {
+      result['phone'] = Boolean(
+        await this.prisma.user.count({ where: { phone: data.phone } }),
+      );
+    }
+
+    return result;
   }
 
-  async create(user: CreateUserDto): Promise<UserEntity> {
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+    return PrismaUserMapper.toDomain(user);
+  }
+
+  async create(user: CreateUserDto) {
     const createdUser = await this.prisma.$transaction(async (ctx) => {
       const hasEmail = await ctx.user.findUnique({
         where: { email: user.email },
@@ -64,7 +89,7 @@ export class PrismaUsersRepository implements UsersRepository {
     return PrismaUserMapper.toDomain(createdUser);
   }
 
-  async update(id: UserEntity['id'], user: EditUserDto): Promise<UserEntity> {
+  async update(id: UserEntity['id'], user: EditUserDto) {
     const updatedUser = await this.prisma.$transaction(async (ctx) => {
       const currentUser = await ctx.user.findUnique({ where: { id: id } });
 
@@ -118,7 +143,8 @@ export class PrismaUsersRepository implements UsersRepository {
     return PrismaUserMapper.toDomain(updatedUser);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.prisma.user.delete({ where: { id } });
+  async delete(id: string) {
+    const user = await this.findById(id);
+    await this.prisma.user.delete({ where: { id: user.id } });
   }
 }

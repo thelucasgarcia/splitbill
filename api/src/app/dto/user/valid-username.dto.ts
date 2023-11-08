@@ -7,5 +7,5 @@ export class ValidUsernameParamDto {
   @IsOptional()
   @IsNotEmpty()
   @Length(3, 50)
-  username: string;
+  readonly username: string;
 }

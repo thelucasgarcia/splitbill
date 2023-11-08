@@ -5,5 +5,5 @@ export class FindOneParamDto {
   @IsUUID()
   @IsNotEmpty()
   @ApiProperty()
-  id: string;
+  readonly id: string;
 }

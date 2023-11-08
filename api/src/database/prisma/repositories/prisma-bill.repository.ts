@@ -4,7 +4,6 @@ import { DefaultArgs } from '@prisma/client/runtime/library';
 import { CreateBillDto } from 'src/app/dto/bill/create-bill.dto';
 import { EditBillDto } from 'src/app/dto/bill/edit-bill.dto';
 import { FindOneParamDto } from 'src/app/dto/common/find-one-param.dto';
-import { BillEntity } from 'src/app/entities/bill.entity';
 import { BillNotFoundException } from 'src/app/exceptions/bill/bill-not-found.exception';
 import { BillRepository } from 'src/app/repositories/bill.repository';
 import { UsersRepository } from 'src/app/repositories/users.repository';
@@ -50,9 +49,7 @@ export class PrismaBillRepository implements BillRepository {
       },
     };
 
-  async findAll(): Promise<BillEntity[]> {
-    // throw new BillNotFoundException();
-
+  async findAll() {
     const bills = await this.prisma.bill.findMany({
       include: {
         user: this.includeUser,
@@ -63,7 +60,7 @@ export class PrismaBillRepository implements BillRepository {
     return bills.map(PrismaBillMapper.toDomain);
   }
 
-  async findById(id: string): Promise<BillEntity | null> {
+  async findById(id: string) {
     const bill = await this.prisma.bill.findUnique({
       where: { id },
       include: {
@@ -80,7 +77,7 @@ export class PrismaBillRepository implements BillRepository {
     return PrismaBillMapper.toDomain(bill);
   }
 
-  async create(bill: CreateBillDto, userId: string): Promise<BillEntity> {
+  async create(bill: CreateBillDto, userId: string) {
     const user = await this.userRepository.findById(userId);
     const createdBill = await this.prisma.bill.create({
       data: {
@@ -101,10 +98,7 @@ export class PrismaBillRepository implements BillRepository {
     return PrismaBillMapper.toDomain(createdBill);
   }
 
-  async update(
-    { id }: FindOneParamDto,
-    editBill: EditBillDto,
-  ): Promise<BillEntity> {
+  async update({ id }: FindOneParamDto, editBill: EditBillDto) {
     const updatedBill = await this.prisma.$transaction(async (ctx) => {
       const currentBill = await this.findById(id);
 
@@ -126,10 +120,10 @@ export class PrismaBillRepository implements BillRepository {
     return PrismaBillMapper.toDomain(updatedBill);
   }
 
-  async delete(id: string): Promise<BillEntity> {
-    // const bill = await this.findById(id);
+  async delete(id: string) {
+    const bill = await this.findById(id);
     const removedBill = await this.prisma.bill.delete({
-      where: { id: id },
+      where: { id: bill.id },
     });
 
     return PrismaBillMapper.toDomain(removedBill);

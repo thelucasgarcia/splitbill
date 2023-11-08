@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AttemptRegisterDto } from 'src/app/dto/auth/attempt.dto';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from 'src/app/dto/auth/register.dto';
-import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
 import { AuthInvalidRefreshTokenException } from 'src/app/exceptions/auth/auth-not-authenticated.exception';
-import { ValidUsername } from 'src/app/use-cases/auth/attemp.auth';
+import { AttemptRegister } from 'src/app/use-cases/auth/attempt.auth';
 import { LoginAuth } from 'src/app/use-cases/auth/login.auth';
 import { RegisterAuth } from 'src/app/use-cases/auth/register.auth';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
@@ -16,7 +16,7 @@ export class AuthService {
     private readonly useLoginAuth: LoginAuth,
     private readonly useRegisterAuth: RegisterAuth,
     private readonly useFindOneUser: FindOneUser,
-    private readonly useValidUsername: ValidUsername,
+    private readonly useAttemptRegister: AttemptRegister,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -30,8 +30,8 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  async attemp(param: ValidUsernameParamDto) {
-    return await this.useValidUsername.execute(param);
+  async attempt(param: AttemptRegisterDto) {
+    return await this.useAttemptRegister.execute(param);
   }
 
   async refreshToken(token: string, id: string) {

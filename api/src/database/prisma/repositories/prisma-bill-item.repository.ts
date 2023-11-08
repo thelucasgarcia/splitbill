@@ -3,7 +3,6 @@ import { CreateBillItemDto } from 'src/app/dto/bill-item/create-bill-item.dto';
 import { FindOneParamDto } from 'src/app/dto/common/find-one-param.dto';
 
 import { EditBillItemDto } from 'src/app/dto/bill-item/edit-bill-item.dto';
-import { BillItemEntity } from 'src/app/entities/bill-item.entity';
 import { BillItemNotFoundException } from 'src/app/exceptions/bill-item/bill-Item-not-found.exception';
 import { BillItemRepository } from 'src/app/repositories/bill-item.repository';
 import { BillRepository } from 'src/app/repositories/bill.repository';
@@ -17,14 +16,25 @@ export class PrismaBillItemRepository implements BillItemRepository {
     private readonly billRepository: BillRepository,
   ) {}
 
-  async findAll(): Promise<BillItemEntity[]> {
+  async findAll() {
     const items = await this.prisma.billItem.findMany();
     return items.map(PrismaBillItemMapper.toDomain);
   }
 
-  async findById(id: string): Promise<BillItemEntity | null> {
+  async findById(id: string) {
     const item = await this.prisma.billItem.findUnique({
       where: { id },
+      include: {
+        members: {
+          include: {
+            member: {
+              include: {
+                member: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!item) {
@@ -34,21 +44,22 @@ export class PrismaBillItemRepository implements BillItemRepository {
     return PrismaBillItemMapper.toDomain(item);
   }
 
-  async create(data: CreateBillItemDto): Promise<BillItemEntity> {
+  async create(data: CreateBillItemDto) {
     const bill = await this.billRepository.findById(data.billId);
-
+    const participants = [];
     if (data.participants) {
-      const billMembersId = bill.members.map((el) => el.memberId);
-      data.participants.forEach((el, index) => {
-        const hasMember = billMembersId.includes(el.memberId);
-        console.log(bill.members, billMembersId, hasMember, el.memberId);
-        if (!hasMember) {
-          data.participants.splice(index, 1);
+      data.participants.forEach((el) => {
+        const hasMember = bill.members.find(
+          (member) => member.memberId === el.memberId,
+        );
+        if (hasMember) {
+          participants.push({
+            memberId: hasMember.id,
+            percentage: Number(el.percentage),
+          });
         }
       });
     }
-
-    console.log(data.participants);
 
     const item = await this.prisma.billItem.create({
       data: {
@@ -59,13 +70,7 @@ export class PrismaBillItemRepository implements BillItemRepository {
         type: data.type,
         members: {
           createMany: {
-            data: [
-              {
-                id: bill.id,
-                memberId: '813c6f7b-eaac-4d39-bd19-1e49c8bca063',
-                percentage: 100,
-              },
-            ],
+            data: participants,
           },
         },
       },
@@ -74,15 +79,10 @@ export class PrismaBillItemRepository implements BillItemRepository {
       },
     });
 
-    console.log(item);
-
     return PrismaBillItemMapper.toDomain(item);
   }
 
-  async update(
-    { id }: FindOneParamDto,
-    editBill: EditBillItemDto,
-  ): Promise<BillItemEntity> {
+  async update({ id }: FindOneParamDto, editBill: EditBillItemDto) {
     const updatedBill = await this.prisma.$transaction(async (ctx) => {
       const currentBill = await this.findById(id);
 
@@ -99,7 +99,7 @@ export class PrismaBillItemRepository implements BillItemRepository {
     return PrismaBillItemMapper.toDomain(updatedBill);
   }
 
-  async delete(id: string): Promise<BillItemEntity> {
+  async delete(id: string) {
     const bill = await this.findById(id);
     const item = await this.prisma.billItem.delete({
       where: { id: bill.id },

@@ -74,7 +74,7 @@ model BillMember {
 }
 
 model BillMemberItem {
-  id     String   @unique @default(uuid())
+  id     String   @id @default(uuid())
   itemId String
   item   BillItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
@@ -83,7 +83,7 @@ model BillMemberItem {
 
   percentage Float @default(0)
 
-  @@id([memberId, itemId])
+  @@unique([memberId, itemId])
 }
 
 enum BillType {

@@ -17,13 +17,13 @@ class ParticipantDto {
   @IsUUID()
   @IsNotEmpty()
   @ApiProperty()
-  memberId: string;
+  readonly memberId: string;
 
   @Min(0)
   @Max(100)
   @IsNotEmpty()
   @ApiProperty()
-  percentage: number;
+  readonly percentage: number;
 }
 export class CreateBillItemDto {
   @IsUUID()
