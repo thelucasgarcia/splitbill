@@ -1,7 +1,7 @@
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import { AuthExceptionEnum } from 'src/lib/exceptions/auth.exception.enum';
+import { AuthNotAuthenticatedException } from 'src/app/exceptions/auth/auth-invalid-refresh-token.exception';
 
 export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
   canActivate(
@@ -12,10 +12,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt-refresh') {
 
   handleRequest<TUser = any>(err: any, user: any): TUser {
     if (err || !user) {
-      throw new UnauthorizedException({
-        code: 'NOT_AUTHENTICATED',
-        message: AuthExceptionEnum.NOT_AUTHENTICATED,
-      });
+      throw new AuthNotAuthenticatedException();
     }
     return user;
   }

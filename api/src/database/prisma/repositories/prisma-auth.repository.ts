@@ -1,15 +1,12 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from 'src/app/dto/auth/register.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
 import { AuthRepository } from 'src/app/repositories/auth.repository';
-import { AuthExceptionEnum } from 'src/lib/exceptions/auth.exception.enum';
-import { UserExceptionEnum } from 'src/lib/exceptions/user.exception.enum';
+import { AuthInvalidEmailOrPasswordException } from 'src/app/exceptions/auth/auth-invalid-email-password.exception';
+import { UserEmailIsTakenException } from 'src/app/exceptions/user/user-email-is-taken.exception';
+import { UserUsernameIsTakenException } from 'src/app/exceptions/user/user-username-is-taken.exception';
 import { PrismaUserMapper } from '../mappers/prisma-user-mapper';
 import { PrismaService } from '../prisma.service';
 
@@ -23,10 +20,7 @@ export class PrismaAuthRepository implements AuthRepository {
     });
 
     if (!user) {
-      throw new BadRequestException({
-        code: 'INVALID_EMAIL_PASSWORD',
-        message: AuthExceptionEnum.INVALID_EMAIL_PASSWORD,
-      });
+      throw new AuthInvalidEmailOrPasswordException();
     }
 
     const validatePassword = bcrypt.compareSync(
@@ -35,10 +29,7 @@ export class PrismaAuthRepository implements AuthRepository {
     );
 
     if (!validatePassword) {
-      throw new BadRequestException({
-        code: 'INVALID_EMAIL_PASSWORD',
-        message: AuthExceptionEnum.INVALID_EMAIL_PASSWORD,
-      });
+      throw new AuthInvalidEmailOrPasswordException();
     }
 
     return PrismaUserMapper.toDomain(user);
@@ -51,10 +42,7 @@ export class PrismaAuthRepository implements AuthRepository {
       });
 
       if (hasEmail) {
-        throw new ConflictException({
-          code: 'EMAIL_IS_TAKEN',
-          message: UserExceptionEnum.EMAIL_IS_TAKEN,
-        });
+        throw new UserEmailIsTakenException();
       }
 
       const hasUsername = await ctx.user.findUnique({
@@ -62,10 +50,7 @@ export class PrismaAuthRepository implements AuthRepository {
       });
 
       if (hasUsername) {
-        throw new ConflictException({
-          code: 'USERNAME_IS_TAKEN',
-          message: UserExceptionEnum.USERNAME_IS_TAKEN,
-        });
+        throw new UserUsernameIsTakenException();
       }
 
       return await ctx.user.create({

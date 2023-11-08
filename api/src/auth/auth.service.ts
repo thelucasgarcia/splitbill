@@ -1,15 +1,14 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthDto } from 'src/app/dto/auth/login.dto';
 import { RegisterAuthDto } from 'src/app/dto/auth/register.dto';
 import { ValidUsernameParamDto } from 'src/app/dto/user/valid-username.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
+import { AuthInvalidRefreshTokenException } from 'src/app/exceptions/auth/auth-not-authenticated.exception';
 import { ValidUsername } from 'src/app/use-cases/auth/attemp.auth';
 import { LoginAuth } from 'src/app/use-cases/auth/login.auth';
 import { RegisterAuth } from 'src/app/use-cases/auth/register.auth';
 import { FindOneUser } from 'src/app/use-cases/user/find-one-user';
-
-import { AuthExceptionEnum } from 'src/lib/exceptions/auth.exception.enum';
 
 @Injectable()
 export class AuthService {
@@ -41,10 +40,7 @@ export class AuthService {
       const user = await this.useFindOneUser.execute({ id });
       return this.generateTokens(user);
     } catch (error) {
-      throw new ForbiddenException({
-        code: 'REFRESH_TOKEN_INVALID',
-        message: AuthExceptionEnum.REFRESH_TOKEN_INVALID,
-      });
+      throw new AuthInvalidRefreshTokenException(error);
     }
   }
 

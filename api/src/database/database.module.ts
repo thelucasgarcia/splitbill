@@ -10,8 +10,14 @@ import { PrismaBillItemRepository } from './prisma/repositories/prisma-bill-item
 import { PrismaUsersRepository } from './prisma/repositories/prisma-users.repository';
 import { BillMemberRepository } from 'src/app/repositories/bill-member.repository';
 import { PrismaBillMemberRepository } from './prisma/repositories/prisma-bill-member.repository';
+import { APP_FILTER } from '@nestjs/core';
+import { PrismaClientExceptionFilter } from './prisma/exceptions/prisma-client-exception.filter';
 @Module({
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: PrismaClientExceptionFilter,
+    },
     PrismaService,
     {
       provide: UsersRepository,

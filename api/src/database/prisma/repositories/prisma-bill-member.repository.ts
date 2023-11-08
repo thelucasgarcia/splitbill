@@ -1,12 +1,12 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
+import { ToggleBillMemberDto } from 'src/app/dto/bill-member/toggle-member-bill.dto';
 import { BillMemberEntity } from 'src/app/entities/bill-member.entity';
 import { BillMemberRepository } from 'src/app/repositories/bill-member.repository';
 import { BillRepository } from 'src/app/repositories/bill.repository';
 import { UsersRepository } from 'src/app/repositories/users.repository';
 import { PrismaBillMemberMapper } from '../mappers/prisma-bill-member-mapper';
 import { PrismaService } from '../prisma.service';
-import { ToggleBillMemberDto } from 'src/app/dto/bill-member/toggle-member-bill.dto';
 
 @Injectable()
 export class PrismaBillMemberRepository implements BillMemberRepository {

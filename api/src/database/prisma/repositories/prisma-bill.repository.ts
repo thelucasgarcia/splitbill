@@ -1,16 +1,15 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { CreateBillDto } from 'src/app/dto/bill/create-bill.dto';
 import { EditBillDto } from 'src/app/dto/bill/edit-bill.dto';
 import { FindOneParamDto } from 'src/app/dto/common/find-one-param.dto';
 import { BillEntity } from 'src/app/entities/bill.entity';
+import { BillNotFoundException } from 'src/app/exceptions/bill/bill-not-found.exception';
 import { BillRepository } from 'src/app/repositories/bill.repository';
-import { BillExceptionEnum } from 'src/lib/exceptions/bill.exception.enum';
+import { UsersRepository } from 'src/app/repositories/users.repository';
 import { PrismaBillMapper } from '../mappers/prisma-bill-mapper';
 import { PrismaService } from '../prisma.service';
-import { UsersRepository } from 'src/app/repositories/users.repository';
-
 @Injectable()
 export class PrismaBillRepository implements BillRepository {
   constructor(
@@ -23,6 +22,16 @@ export class PrismaBillRepository implements BillRepository {
       id: true,
       name: true,
       email: true,
+    },
+  };
+
+  private includeItems: boolean | Prisma.BillItemDefaultArgs<DefaultArgs> = {
+    select: {
+      id: true,
+      name: true,
+      price: true,
+      quantity: true,
+      type: true,
     },
   };
 
@@ -42,17 +51,16 @@ export class PrismaBillRepository implements BillRepository {
     };
 
   async findAll(): Promise<BillEntity[]> {
-    try {
-      const bills = await this.prisma.bill.findMany({
-        include: {
-          user: this.includeUser,
-          members: true,
-        },
-      });
-      return bills.map(PrismaBillMapper.toDomain);
-    } catch (error) {
-      throw new HttpException(error.response, error.status);
-    }
+    // throw new BillNotFoundException();
+
+    const bills = await this.prisma.bill.findMany({
+      include: {
+        user: this.includeUser,
+        members: this.includeMembers,
+        items: this.includeItems,
+      },
+    });
+    return bills.map(PrismaBillMapper.toDomain);
   }
 
   async findById(id: string): Promise<BillEntity | null> {
@@ -66,79 +74,64 @@ export class PrismaBillRepository implements BillRepository {
     });
 
     if (!bill) {
-      throw new NotFoundException({
-        code: 'BILL_NOT_FOUND',
-        message: BillExceptionEnum.BILL_NOT_FOUND,
-      });
+      throw new BillNotFoundException();
     }
 
     return PrismaBillMapper.toDomain(bill);
   }
 
   async create(bill: CreateBillDto, userId: string): Promise<BillEntity> {
-    try {
-      const user = await this.userRepository.findById(userId);
-      const createdBill = await this.prisma.bill.create({
-        data: {
-          ...bill,
-          userId: user.id,
-          members: {
-            create: {
-              memberId: user.id,
-            },
+    const user = await this.userRepository.findById(userId);
+    const createdBill = await this.prisma.bill.create({
+      data: {
+        ...bill,
+        userId: user.id,
+        members: {
+          create: {
+            memberId: user.id,
           },
         },
-        include: {
-          user: this.includeUser,
-          members: this.includeMembers,
-        },
-      });
+      },
+      include: {
+        user: this.includeUser,
+        members: this.includeMembers,
+      },
+    });
 
-      return PrismaBillMapper.toDomain(createdBill);
-    } catch (error) {
-      throw new HttpException(error.response, error.status);
-    }
+    return PrismaBillMapper.toDomain(createdBill);
   }
 
   async update(
     { id }: FindOneParamDto,
     editBill: EditBillDto,
   ): Promise<BillEntity> {
-    try {
-      const updatedBill = await this.prisma.$transaction(async (ctx) => {
-        const currentBill = await this.findById(id);
+    const updatedBill = await this.prisma.$transaction(async (ctx) => {
+      const currentBill = await this.findById(id);
 
-        return await ctx.bill.update({
-          where: { id: currentBill.id },
-          data: {
-            name: editBill.name,
-            tag: editBill.tag,
-            description: editBill.description,
-            editValues: editBill.editValues,
-            inviteMembers: editBill.inviteMembers,
-          },
-          include: {
-            user: this.includeUser,
-          },
-        });
+      return await ctx.bill.update({
+        where: { id: currentBill.id },
+        data: {
+          name: editBill.name,
+          tag: editBill.tag,
+          description: editBill.description,
+          editValues: editBill.editValues,
+          inviteMembers: editBill.inviteMembers,
+        },
+        include: {
+          user: this.includeUser,
+        },
       });
+    });
 
-      return PrismaBillMapper.toDomain(updatedBill);
-    } catch (error) {
-      throw new HttpException(error.response, error.status);
-    }
+    return PrismaBillMapper.toDomain(updatedBill);
   }
 
   async delete(id: string): Promise<BillEntity> {
-    try {
-      const bill = await this.findById(id);
-      const removedBill = await this.prisma.bill.delete({
-        where: { id: bill.id },
-      });
+    // const bill = await this.findById(id);
+    const removedBill = await this.prisma.bill.delete({
+      where: { id: id },
+    });
 
-      return PrismaBillMapper.toDomain(removedBill);
-    } catch (error) {
-      throw new HttpException(error.response, error.status);
-    }
+    return PrismaBillMapper.toDomain(removedBill);
   }
 }

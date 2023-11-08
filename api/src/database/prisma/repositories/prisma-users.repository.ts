@@ -1,16 +1,15 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDto } from 'src/app/dto/user/create-user.dto';
+import { EditUserDto } from 'src/app/dto/user/edit-user.dto';
 import { UserEntity } from 'src/app/entities/user.entity';
 import { UsersRepository } from 'src/app/repositories/users.repository';
-import { UserExceptionEnum } from 'src/lib/exceptions/user.exception.enum';
+import { UserCpfIsTakenException } from 'src/app/exceptions/user/user-cpf-is-taken.exception';
+import { UserEmailIsTakenException } from 'src/app/exceptions/user/user-email-is-taken.exception';
+import { UserNotFoundException } from 'src/app/exceptions/user/user-not-found.exception';
+import { UserPhoneIsTakenException } from 'src/app/exceptions/user/user-phone-is-taken.exception';
+import { UserUsernameIsTakenException } from 'src/app/exceptions/user/user-username-is-taken.exception';
 import { PrismaUserMapper } from '../mappers/prisma-user-mapper';
 import { PrismaService } from '../prisma.service';
-import { EditUserDto } from 'src/app/dto/user/edit-user.dto';
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -31,10 +30,7 @@ export class PrismaUsersRepository implements UsersRepository {
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
       if (!user) {
-        throw new NotFoundException({
-          code: 'USER_NOT_FOUND',
-          message: UserExceptionEnum.USER_NOT_FOUND,
-        });
+        throw new UserNotFoundException();
       }
       return PrismaUserMapper.toDomain(user);
     } catch (error) {
@@ -49,10 +45,7 @@ export class PrismaUsersRepository implements UsersRepository {
       });
 
       if (hasEmail) {
-        throw new UnprocessableEntityException({
-          code: 'EMAIL_IS_TAKEN',
-          message: UserExceptionEnum.EMAIL_IS_TAKEN,
-        });
+        throw new UserEmailIsTakenException();
       }
 
       const hasUsername = await ctx.user.findUnique({
@@ -60,10 +53,7 @@ export class PrismaUsersRepository implements UsersRepository {
       });
 
       if (hasUsername) {
-        throw new UnprocessableEntityException({
-          code: 'USERNAME_IS_TAKEN',
-          message: UserExceptionEnum.USERNAME_IS_TAKEN,
-        });
+        throw new UserUsernameIsTakenException();
       }
 
       return await ctx.user.create({
@@ -79,10 +69,7 @@ export class PrismaUsersRepository implements UsersRepository {
       const currentUser = await ctx.user.findUnique({ where: { id: id } });
 
       if (!currentUser) {
-        throw new NotFoundException({
-          code: 'USER_NOT_FOUND',
-          message: UserExceptionEnum.USER_NOT_FOUND,
-        });
+        throw new UserNotFoundException();
       }
 
       const editUser: EditUserDto = {
@@ -103,10 +90,7 @@ export class PrismaUsersRepository implements UsersRepository {
         });
 
         if (hasPhone) {
-          throw new UnprocessableEntityException({
-            code: 'PHONE_IS_TAKEN',
-            message: UserExceptionEnum.PHONE_IS_TAKEN,
-          });
+          throw new UserPhoneIsTakenException();
         }
       }
 
@@ -121,10 +105,7 @@ export class PrismaUsersRepository implements UsersRepository {
         });
 
         if (hasCpf) {
-          throw new UnprocessableEntityException({
-            code: 'CPF_IS_TAKEN',
-            message: UserExceptionEnum.CPF_IS_TAKEN,
-          });
+          throw new UserCpfIsTakenException();
         }
       }
 
