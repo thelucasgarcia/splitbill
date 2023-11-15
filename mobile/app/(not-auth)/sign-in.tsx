@@ -3,8 +3,9 @@ import { Link } from 'expo-router';
 import { Formik } from 'formik';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import axios from 'axios'
+import { useCreateUser, useUsers } from '../../bff/queries/user';
 export default function SignInScreen() {
-  const loginService = async (values: any): Promise<any> => {
+  const loginService = async (values: { name: string }): Promise<any> => {
     try {
       const response = await axios.post('https://splitbill-one.vercel.app/v1/auth/signin', values);
       
@@ -14,6 +15,8 @@ export default function SignInScreen() {
     }
     
   }
+
+  const { data } = useUsers({ id: 123, email: 'oi', name: 'asd'})
 
   const { mutateAsync, isPending, isSuccess } = useMutation({
     mutationFn: loginService
