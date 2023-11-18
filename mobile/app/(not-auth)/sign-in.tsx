@@ -1,31 +1,47 @@
-import axios from 'axios';
+
+import { useCreatePost } from '@/bff/queries/user';
 import { Link } from 'expo-router';
 import { Formik } from 'formik';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Button, Text, TextField, Toast, View } from 'react-native-ui-lib';
+import ScreenContainer from '../../src/components/ScreenContainer/index';
 export default function SignInScreen() {
+
+  const { mutateAsync, data, isSuccess} = useCreatePost()
   return (
-    <View className='flex-1 justify-center p-10 items-center'>
-      <Text className='font-bold text-3xl'>Bem vindo de volta</Text>
-      <Text className='font-thin'>Como deseja fazer login?</Text>
+    <ScreenContainer>
+      <Text text30M>Bem vindo de volta</Text>
+      <Text>Como deseja fazer login?</Text>
+  
       <Formik
         initialValues={{
           email: "lucas@gmail.com",
           password: "123456"
       }}
         onSubmit={values => {
+          return mutateAsync({
+             userId : 1,
+             body: 'teste',
+             title: 'teste'
+          }).then(() => {
 
+          })
         }}
       >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-          <View className='w-full'>
-            <TextInput
+        {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+          <View  width={5}>
+            <TextField
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
-              keyboardType='phone-pad'
-              className='px-5 py-3 w-full bg-slate-400 text-white border-blue-950 border-2 rounded-xl'
+              placeholder={'Placeholder'}
+              floatingPlaceholder
+              enableErrors
+              validate={['required', 'email', (value: any) => value.length > 6]}
+              validationMessage={['Field is required', 'Email is invalid', 'Password is too short']}
+              showCharCounter
+              maxLength={30}
             />
-            <TextInput
+            <TextField
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.password}
@@ -33,11 +49,21 @@ export default function SignInScreen() {
               className='px-5 py-3 w-full bg-slate-400 text-white border-blue-950 border-2 rounded-xl'
               secureTextEntry
             />
-            <Button onPress={() => handleSubmit()} title={"Loading ..." || "Submit"} />
+            <Button onPress={() => handleSubmit()}>
+              <Text>{isSubmitting ? "Loading ..." : "Submit"} </Text>
+              </Button>
           </View>
         )}
       </Formik>
       <Link href={'/(not-auth)/sign-up'}>Register screen</Link>
-    </View>
+
+      <Toast
+  visible={isSuccess}
+  position={'top'}
+  message={'Criado com sucesso!'}
+  autoDismiss={1000}
+></Toast>
+
+    </ScreenContainer>
   );
 }
