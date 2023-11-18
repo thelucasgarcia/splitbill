@@ -1,10 +1,5 @@
-import { UserService } from './user';
+import { User } from './user';
 
 export const dataSources = {
-  users: new UserService()
-}
-
-export interface DataSourceProps {
-  cache: any
-  context: any
+  user: new User()
 }

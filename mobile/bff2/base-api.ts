@@ -1,6 +1,6 @@
 import { QueryClient, QueryKey, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosRequestConfig } from 'axios';
-import { RestApi } from './rest-api';
+import { RestApi } from './rest.api';
 
 export class BaseApi extends RestApi{
   private queryClient: ReturnType<typeof useQueryClient> = new QueryClient();

@@ -1,6 +1,6 @@
 import './App.css'
 import reactLogo from './assets/react.svg'
-import { useCreateUser, usePosts, useUsers } from './bff/queries/user'
+import { usePosts, useUsers } from './bff/queries/user'
 import viteLogo from '/vite.svg'
 
 function App() {

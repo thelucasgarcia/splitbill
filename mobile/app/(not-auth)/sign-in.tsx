@@ -1,27 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { Link } from 'expo-router';
 import { Formik } from 'formik';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
-import axios from 'axios'
-import { useCreateUser, useUsers } from '../../bff/queries/user';
+import { Button, Text, TextInput, View } from 'react-native';
 export default function SignInScreen() {
-  const loginService = async (values: { name: string }): Promise<any> => {
-    try {
-      const response = await axios.post('https://splitbill-one.vercel.app/v1/auth/signin', values);
-      
-      return await response.data;
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    
-  }
-
-  const { data } = useUsers({ id: 123, email: 'oi', name: 'asd'})
-
-  const { mutateAsync, isPending, isSuccess } = useMutation({
-    mutationFn: loginService
-  });
-
   return (
     <View className='flex-1 justify-center p-10 items-center'>
       <Text className='font-bold text-3xl'>Bem vindo de volta</Text>
@@ -32,7 +13,7 @@ export default function SignInScreen() {
           password: "123456"
       }}
         onSubmit={values => {
-          mutateAsync(values).then(res => console.log(res))
+
         }}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -52,7 +33,7 @@ export default function SignInScreen() {
               className='px-5 py-3 w-full bg-slate-400 text-white border-blue-950 border-2 rounded-xl'
               secureTextEntry
             />
-            <Button onPress={() => handleSubmit()} title={isPending ? "Loading ..." : "Submit"} disabled={isPending} />
+            <Button onPress={() => handleSubmit()} title={"Loading ..." || "Submit"} />
           </View>
         )}
       </Formik>

@@ -42,7 +42,7 @@ export default function RootLayout() {
 }
 
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 function RootLayoutNav() {
 
   return (

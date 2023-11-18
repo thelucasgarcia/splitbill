@@ -15,17 +15,17 @@ export class RestApi {
     return response.data;
   }
 
-  protected async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  protected async post<T, D>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.api().post<T>(url, data, config);
     return response.data;
   }
 
-  protected async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  protected async put<T, D>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.api().put<T>(url, data, config);
     return response.data;
   }
   
-  protected async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  protected async patch<T, D>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.api().patch<T>(url, data, config);
     return response.data;
   }

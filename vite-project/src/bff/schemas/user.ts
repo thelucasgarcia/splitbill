@@ -1,5 +1,6 @@
-import { dataSources } from '../data-sources';
-
+export interface QueryGetOneUserArgs {
+  id: string
+}
 export interface UserResponse {
   id: number
   name: string
@@ -39,14 +40,4 @@ interface Company {
   name: string
   catchPhrase: string
   bs: string
-}
-
-export const resolvers = {
-  Query: {
-    getUsers: () => dataSources.users.getAllUsers(),
-    getPosts: () => dataSources.users.getAllPosts()
-  },
-  Mutation: {
-    createUser: () => dataSources.users.createUser()
-  }
 }
