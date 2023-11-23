@@ -1,13 +1,14 @@
 import { useSession } from '@/auth/context';
-import { Redirect, Stack } from 'expo-router';
-import { Text } from 'react-native-ui-lib';
+import HeaderButton from '@Components/HeaderButton';
+import { Redirect, Stack, router } from 'expo-router';
+import { Colors, LoaderScreen } from 'react-native-ui-lib';
 
 export default function BillLayout() {
   const { session, isLoading } = useSession();
 
   // You can keep the splash screen open, or render a loading screen like we do here.
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <LoaderScreen message='Carregando ...' />
   }
 
   // Only require authentication within the (app) group's layout as users
@@ -17,20 +18,23 @@ export default function BillLayout() {
     // in the headless Node process that the pages are rendered in.
     return <Redirect href="/sign-in" />;
   }
+
   return (
       <Stack screenOptions={{
-        headerShown: false,
+        headerShown: true,
         headerBackTitle: 'Voltar',
+        headerLeft: (({ canGoBack, label, tintColor }) => {
+          if (canGoBack) {
+            return <HeaderButton color={tintColor} text="Voltar" onPress={() => router.back()} />
+          }
+        }),
+        headerStyle: {
+          backgroundColor: Colors.$backgroundPrimaryHeavy
+        },
+        headerTintColor: 'white'
       }}>
-        <Stack.Screen name="bill/[id]" options={{
-          title: 'Detalhes da despesa',
-          headerShown: true,
-          autoHideHomeIndicator: true
-        }} />
-        <Stack.Screen name="bill/edit/[id]" options={{
-          title: 'Editar despesa',
-          headerShown: true,
-          presentation: 'modal'
+        <Stack.Screen name="(tabs)" options={{
+          headerShown: false,
         }} />
       </Stack>
   );

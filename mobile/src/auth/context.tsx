@@ -67,7 +67,19 @@ export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('access_token');
   const [[isLoadingUser, refreshtoken], setRefreshToken] = useStorageState('refresh_token');
 
+  function signIn(payload: AuthTokens) {
+    setSession(payload.access_token);    
+    if (payload.refresh_token) {
+      setRefreshToken(payload.refresh_token)
+    }
+  }
 
+  function signOut() {
+    setSession(null);
+    setRefreshToken(null);
+  }
+
+ 
   const user = decodeUser(session)
 
   const tokens = session ? {
@@ -78,18 +90,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signIn: (payload: AuthTokens) => {
-          // Perform sign-in logic here
-          setSession(payload.access_token);
-          
-          if (payload.refresh_token) {
-            setRefreshToken(payload.refresh_token)
-          }
-        },
-        signOut: () => {
-          setSession(null);
-          setRefreshToken(null);
-        },
+        signIn,
+        signOut,
         session,
         isLoading,
         user,

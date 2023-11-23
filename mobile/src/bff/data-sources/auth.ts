@@ -6,5 +6,5 @@ export class Auth extends BaseApi {
   signIn(params: AuthSignInRequest) {
     return this.post<AuthTokenResponse,AuthSignInRequest>(`/signin`, params)
   }
-
+  
 }

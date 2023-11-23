@@ -2,20 +2,20 @@ import { useBill } from '@/bff/queries/bill';
 import HeaderButton from '@Components/HeaderButton';
 import ScreenContainer from '@Components/ScreenContainer';
 import { FontAwesome } from '@expo/vector-icons';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useFormik } from 'formik';
-import { Button } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
-import { Card, Colors, Text, View } from 'react-native-ui-lib';
-
+import { Card, Colors, LoaderScreen, Text, View } from 'react-native-ui-lib';
+import { Switch as SwitchRN } from 'react-native'
 const GAP = 20
 export default function BillDetails() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const { data, isLoading, isSuccess, error } = useBill({ id })
 
   if (isLoading) {
-    <View>Loading ...</View>
+    return <LoaderScreen />
   }
+  
   const { handleChange, setFieldValue, handleBlur, values, isValid, isSubmitting, dirty } = useFormik({
     initialValues: {
       inviteMembers: data?.inviteMembers,
@@ -30,11 +30,6 @@ export default function BillDetails() {
     return (
       <ScreenContainer>
         <Stack.Screen options={{
-          headerLeft: (({ canGoBack, label, tintColor }) => {
-            if (canGoBack) {
-              return <HeaderButton color={tintColor} text="Cancelar" onPress={() => router.back()} />
-            }
-          }),
           headerRight: ({ tintColor }) => (
             <HeaderButton color={tintColor} text='Salvar' disabled={!dirty && isValid} onPress={() => { }}/>
           )
@@ -43,7 +38,8 @@ export default function BillDetails() {
           <Card padding-10 style={{ gap: GAP }}>
             <View row centerV spread>
               <Text text70 grey10>Adicionar Participantes</Text>
-              <Switch value={values.inviteMembers} onValueChange={(value) => {
+
+              <SwitchRN value={values.inviteMembers} onValueChange={(value) => {
                 setFieldValue('inviteMembers', value)
               }} />
             </View>

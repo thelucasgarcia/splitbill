@@ -3,11 +3,23 @@ import { dataSources } from '../data-sources'
 export interface BillResponse {
   id: string
   name: string
-  user: User
+  user: {
+    id: string
+    name: string
+    email: string
+  }
   userId: string
   total: number
   items: any[]
-  members: Members[]
+  members: {
+    id: string
+    billId: string
+    memberId: string
+    member: {
+      id: string
+      name: string
+    }
+  }[]
   description: string
   editValues: boolean
   inviteMembers: boolean
@@ -15,29 +27,15 @@ export interface BillResponse {
   createdAt: string
   updatedAt: string
 }
-
-export interface User {
-  id: string
-  name: string
-  email: string
-}
-
-export interface Members {
-  id: string
-  billId: string
-  memberId: string
-  member: Member
-}
-
-export interface Member {
-  id: string
-  name: string
-}
-
 export interface QueryGetOneBillArgs {
   id: string
 }
 
+export interface MutationCreateBillArgs {
+  name: string
+  description: string
+  tag?: string[]
+}
 
 export const resolvers = {
   Query: {
@@ -45,5 +43,6 @@ export const resolvers = {
     getOneBill: (params: QueryGetOneBillArgs) => dataSources.bill.getOneBill(params),
   },
   Mutation: {
+    createBill: (params: MutationCreateBillArgs) => dataSources.bill.createBill(params)
   },
 }

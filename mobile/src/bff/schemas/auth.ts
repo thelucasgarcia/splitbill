@@ -20,6 +20,6 @@ export const resolvers = {
     
   },
   Mutation: {
-    signIn: (params: AuthSignInRequest) => dataSources.auth.signIn(params)
+    signIn: (params: AuthSignInRequest) => dataSources.auth.signIn(params),
   },
 }

@@ -1,5 +1,5 @@
 import { BaseApi } from '../base-api';
-import { BillResponse, QueryGetOneBillArgs } from '../schemas/bill';
+import { BillResponse, MutationCreateBillArgs, QueryGetOneBillArgs } from '../schemas/bill';
 
 export class Bill extends BaseApi {
   override baseURL = 'https://splitbill-one.vercel.app/v1/bill'
@@ -12,4 +12,7 @@ export class Bill extends BaseApi {
     return this.get<BillResponse>(`/${id}`)
   }
 
+  createBill(params: MutationCreateBillArgs) {
+    return this.post<BillResponse, MutationCreateBillArgs>('/', params)
+  }
 }

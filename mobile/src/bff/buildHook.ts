@@ -1,3 +1,4 @@
+import { queryClient } from '@/config/query-client';
 import { InvalidateQueryFilters, MutationFunction, QueryKey, UseInfiniteQueryOptions, UseQueryOptions, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
@@ -26,11 +27,10 @@ function useBuildInfiniteQueryHook<TArgs = unknown, TData extends PageParam = an
 
 function useBuildMutationHook<TData, TVariables>(queryKey: QueryKey, mutationFn?: MutationFunction<TData, TVariables>) {
   return () => {
-    const client = useQueryClient()
     const mutation = useMutation<TData, AxiosError | Error, TVariables>({
       mutationFn: mutationFn,
       onSuccess: () => {
-        client.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey
         });
       },
@@ -39,7 +39,7 @@ function useBuildMutationHook<TData, TVariables>(queryKey: QueryKey, mutationFn?
     return {
       ...mutation,
       invalidate: (...args: Array<InvalidateQueryFilters>) => {
-        const queryKeys = args.map((key) => client.invalidateQueries(key))
+        const queryKeys = args.map((key) => queryClient.invalidateQueries(key))
         return Promise.all(queryKeys)
       },
     }

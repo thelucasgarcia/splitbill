@@ -1,21 +1,14 @@
 import { useBill } from '@/bff/queries/bill';
-import ScreenContainer from '@Components/ScreenContainer';
-import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { Link, useRouter } from 'expo-router';
-import { Stack, router, useGlobalSearchParams, useLocalSearchParams, useSearchParams } from 'expo-router';
-import { Button } from 'react-native';
-import { Card, ListItem, Text, View } from 'react-native-ui-lib';
-import { Text as TextRn } from 'react-native'
 import HeaderButton from '@Components/HeaderButton';
-import { ScreenStackHeaderBackButtonImage, ScreenStackHeaderRightView, ScreenStackHeaderSubview } from 'react-native-screens';
+import ScreenContainer from '@Components/ScreenContainer';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
+import { Card, Colors, ListItem, LoaderScreen, Text } from 'react-native-ui-lib';
 
 export default function BillDetails() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const navigation = useNavigation();
   const { data, isLoading, isSuccess, error } = useBill({ id })
   if (isLoading) {
-    <View>Loading ...</View>
+    return <LoaderScreen message='Carregando Despesa' backgroundColor={Colors.$backgroundDark} />
   }
 
   if (isSuccess) {
@@ -23,11 +16,11 @@ export default function BillDetails() {
       <ScreenContainer>
         <Stack.Screen options={{
           headerRight: ({ tintColor }) => (
-            <HeaderButton color={tintColor} text='Editar' onPress={() => router.push(`/(app)/bill/edit/${data.id}`)} />
+            <HeaderButton color={tintColor} text='Editar' onPress={() => router.push(`/bill/edit/${data.id}`)} />
           )
         }} />
 
-        <Card >
+        <Card disabled>
           <ListItem padding-10 spread>
             <ListItem.Part middle column containerStyle={{ justifyContent: 'space-evenly' }}>
               <ListItem.Part >
