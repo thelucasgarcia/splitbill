@@ -1,17 +1,14 @@
 import React, { PropsWithChildren } from 'react';
-import { StyleSheet } from 'react-native';
-import { View } from 'react-native-ui-lib';
+import { Colors, View, ViewProps } from 'react-native-ui-lib';
 
-const ScreenContainer = ({ children }: PropsWithChildren) => {
-  return <View useSafeArea style={style.container}>{children}</View>;
-}
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20
-  }
+const ScreenContainer = (({ children, ...props }: PropsWithChildren<ViewProps>) => {
+  return (
+    <View flex backgroundColor={Colors.$background}>
+      <View useSafeArea flex margin-20 {...props}>
+        {children}
+      </View>
+    </View>
+  );
 })
+
 export default ScreenContainer;
