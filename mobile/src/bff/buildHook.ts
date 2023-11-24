@@ -17,7 +17,7 @@ interface PageParam {
 
 function useBuildInfiniteQueryHook<TArgs = unknown, TData extends PageParam = any>(queryKey: QueryKey, queryFn: (args: TArgs) => Promise<TData>) {
   return (variables: TArgs, options?: UseInfiniteQueryOptions<TData>) => useInfiniteQuery({
-    queryKey: [queryKey, variables],
+    queryKey: variables ? [queryKey, variables] : [queryKey],
     queryFn: ({ pageParam }) => queryFn({ ...variables, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextCursor,

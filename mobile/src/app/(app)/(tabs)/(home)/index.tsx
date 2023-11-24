@@ -1,14 +1,11 @@
 import { BillList } from '@/containers/bills/BillList';
-import ScreenContainer from '@Components/ScreenContainer';
-import { View } from 'react-native-ui-lib';
+import ScreenContent from '@Components/ScreenContent';
 
 export default function Index() {
   return (
-    <ScreenContainer>
-      <View flex-1>
+      <ScreenContent>
         <BillList />
-      </View>
-    </ScreenContainer>
+      </ScreenContent>
   );
 
 }

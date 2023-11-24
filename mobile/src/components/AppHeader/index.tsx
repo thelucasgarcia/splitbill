@@ -1,35 +1,35 @@
 import { useSession } from '@/auth/context';
+import theme from '@/constants/theme';
+import LoaderScreen from '@Components/LoaderScreen';
 import { FontAwesome } from '@expo/vector-icons';
-import { Avatar, Colors, Icon, LoaderScreen, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { TouchableOpacity, View } from 'react-native';
+import { Avatar, Text } from 'react-native-paper';
 
-const AVATAR_DEFAULT = 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'
+const AVATAR_DEFAULT = 'https://api.dicebear.com/avatar.svg'
 
-export default function AppHeader() {
+interface AppHeaderProps {
+  color?: string
+}
+export default function AppHeader({ color } : AppHeaderProps) {
   const { user, isLoading } = useSession();
 
   if (isLoading) {
-    return <LoaderScreen message='Carregando ...'/>
+    return <LoaderScreen />
   }
 
   if (user) {
     const { email, name } = user
     return (
-      <View backgroundColor={Colors.$backgroundPrimaryHeavy}>
-        <View row centerV spread margin-20 marginB-10 useSafeArea >
-          <View row centerV style={{ gap: 10 }}>
-            <Avatar source={{ uri: AVATAR_DEFAULT }} />
+      <View style={{ backgroundColor: theme.colors.primary }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', margin: 20, marginBottom: 10 }} >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <View>
-              <Text text70BO white>{name}</Text>
-              <Text white>{email}</Text>
+              <Text variant='bodySmall' style={{ color: color || 'black' }}>Bem vindo,</Text>
+              <Text variant='headlineMedium' style={{ color: color || 'black', fontWeight: 'bold' }}>{name}</Text>
             </View>
           </View>
-          <View row style={{ gap: 10 }}>
-            <TouchableOpacity>
-              <FontAwesome name='search' size={25} color='white' />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <FontAwesome name='bell' size={25} color='white' />
-            </TouchableOpacity>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <Avatar.Image size={45} source={{ uri: AVATAR_DEFAULT }} />
           </View>
         </View>
       </View>

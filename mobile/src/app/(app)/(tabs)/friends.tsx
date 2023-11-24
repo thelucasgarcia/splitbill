@@ -1,12 +1,8 @@
-import signIn from '@/app/(auth)/sign-in';
-import { useSession } from '@/auth/context';
 import { useCreateBill } from '@/bff/queries/bill';
-import ScreenContainer from '@Components/ScreenContainer';
-import { FontAwesome } from '@expo/vector-icons';
-import { Link, Stack } from 'expo-router';
+import ScreenContent from '@Components/ScreenContent';
 import { useFormik } from 'formik';
 import { Alert } from 'react-native';
-import { Button, Colors, LoaderScreen, Text, TextField, View } from 'react-native-ui-lib';
+import { Text, View } from 'react-native-ui-lib';
 
 export default function Friends() {
   const { mutateAsync } = useCreateBill()
@@ -25,10 +21,10 @@ export default function Friends() {
   })
  
   return (
-    <ScreenContainer center>
+    <ScreenContent center>
       <View>
         <Text white>Convidar amigos</Text>
       </View>
-    </ScreenContainer>
+    </ScreenContent>
   );
 }

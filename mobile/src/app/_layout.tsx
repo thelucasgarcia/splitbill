@@ -8,6 +8,8 @@ import { Colors, ThemeManager } from 'react-native-ui-lib';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Platform, View } from 'react-native';
 import { queryClient } from '@/config/query-client';
+import { PaperProvider } from 'react-native-paper';
+import theme from '@/constants/theme';
 require('react-native-ui-lib/config').setConfig({ appScheme: 'default' });
 
 Colors.loadColors({
@@ -26,7 +28,6 @@ export const unstable_settings = {
   initialRouteName: '(auth)',
 };
 
-ThemeManager
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -58,11 +59,13 @@ function MainLayout() {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <StatusBar backgroundColor={Colors.$backgroundPrimaryHeavy} style='light' animated />
-        <Slot />
-        {Platform.OS === 'web' && (
-          <ReactQueryDevtools client={queryClient} position='right' buttonPosition='bottom-right' />
+        <PaperProvider theme={theme}>
+          <StatusBar backgroundColor={Colors.$backgroundPrimaryHeavy} style='light' animated />
+          <Slot />
+          {Platform.OS === 'web' && (
+            <ReactQueryDevtools client={queryClient} position='right' buttonPosition='bottom-right' />
           )}
+        </PaperProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

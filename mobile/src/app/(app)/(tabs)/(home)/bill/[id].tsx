@@ -1,6 +1,6 @@
 import { useBill } from '@/bff/queries/bill';
 import HeaderButton from '@Components/HeaderButton';
-import ScreenContainer from '@Components/ScreenContainer';
+import ScreenContent from '@Components/ScreenContent';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { Card, Colors, ListItem, LoaderScreen, Text } from 'react-native-ui-lib';
 
@@ -13,7 +13,7 @@ export default function BillDetails() {
 
   if (isSuccess) {
     return (
-      <ScreenContainer>
+      <ScreenContent>
         <Stack.Screen options={{
           headerRight: ({ tintColor }) => (
             <HeaderButton color={tintColor} text='Editar' onPress={() => router.push(`/bill/edit/${data.id}`)} />
@@ -48,7 +48,7 @@ export default function BillDetails() {
         <Text>{data?.user.name || '123'}</Text>
         <Text>{data?.createdAt || '123'}</Text>
         <Text onPress={() => router.back()}>voltar</Text>
-      </ScreenContainer>
+      </ScreenContent>
     )
   }
 

@@ -28,10 +28,6 @@ export default function BillLayout() {
             return <HeaderButton color={tintColor} text="Voltar" onPress={() => router.back()} />
           }
         }),
-        headerStyle: {
-          backgroundColor: Colors.$backgroundPrimaryHeavy
-        },
-        headerTintColor: 'white'
       }}>
         <Stack.Screen name="(tabs)" options={{
           headerShown: false,

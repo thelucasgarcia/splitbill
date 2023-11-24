@@ -3,13 +3,17 @@ import { Colors, Text } from 'react-native-ui-lib';
 
 interface Props extends TouchableOpacityProps {
   color?: string
-  text: string
+  text?: string
+  icon?: React.ReactNode
 }
 
-export default function HeaderButton({ color, text, ...props }: Props) {
+export default function HeaderButton({ color, text, icon, ...props }: Props) {
   return (
     <Pressable {...props} style={{ ...styles.button }} >
-      <Text style={{ ...styles.text, color: props.disabled ? Colors.$textDisabled : color }}>{text}</Text>
+      { text && (
+        <Text style={{ ...styles.text, color: props.disabled ? Colors.$textDisabled : color }}>{text}</Text>
+      )}
+      {icon && icon}
     </Pressable>
   )
 }

@@ -1,12 +1,12 @@
 import { useBill } from '@/bff/queries/bill';
 import HeaderButton from '@Components/HeaderButton';
-import ScreenContainer from '@Components/ScreenContainer';
+import ScreenContent from '@Components/ScreenContent';
 import { FontAwesome } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useFormik } from 'formik';
+import { Switch as SwitchRN } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 import { Card, Colors, LoaderScreen, Text, View } from 'react-native-ui-lib';
-import { Switch as SwitchRN } from 'react-native'
 const GAP = 20
 export default function BillDetails() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -28,7 +28,7 @@ export default function BillDetails() {
 
   if (isSuccess) {
     return (
-      <ScreenContainer>
+      <ScreenContent>
         <Stack.Screen options={{
           headerRight: ({ tintColor }) => (
             <HeaderButton color={tintColor} text='Salvar' disabled={!dirty && isValid} onPress={() => { }}/>
@@ -66,7 +66,7 @@ export default function BillDetails() {
             </View>
           </Card>
         </View>
-      </ScreenContainer>
+      </ScreenContent>
     )
   }
 

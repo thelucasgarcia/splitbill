@@ -1,5 +1,5 @@
 import { useCreateBill } from '@/bff/queries/bill';
-import ScreenContainer from '@Components/ScreenContainer';
+import ScreenContent from '@Components/ScreenContent';
 import { useFormik } from 'formik';
 import { Alert } from 'react-native';
 import { Button, LoaderScreen, TextField, View } from 'react-native-ui-lib';
@@ -21,7 +21,7 @@ export default function Calculator() {
   })
   return <LoaderScreen message={'Message goes here'}/>
   return (
-    <ScreenContainer centerV>
+    <ScreenContent>
       <View>
         <TextField
           onChangeText={handleChange('name')}
@@ -50,6 +50,6 @@ export default function Calculator() {
         />
 
       </View>
-    </ScreenContainer>
+    </ScreenContent>
   );
 }

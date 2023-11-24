@@ -1,3 +1,4 @@
+import theme from '@/constants/theme';
 import AppHeader from '@Components/AppHeader';
 import HeaderButton from '@Components/HeaderButton';
 import { Stack, router } from 'expo-router';
@@ -8,18 +9,21 @@ export default function BillLayout() {
     <Stack screenOptions={{
       headerShown: true,
       headerBackTitle: 'Voltar',
+      headerTitleAlign: 'center',
       headerLeft: (({ canGoBack, label, tintColor }) => {
         if (canGoBack) {
           return <HeaderButton color={tintColor} text={label || "Voltar"} onPress={() => router.back()} />
         }
       }),
       headerStyle: {
-        backgroundColor: Colors.$backgroundPrimaryHeavy
+        backgroundColor: theme.colors.primary
       },
-      headerTintColor: 'white'
     }}>
       <Stack.Screen name="index" options={{
-        header: () => <AppHeader />,
+        header: ({ options }) => <AppHeader color={options.headerTintColor } />,
+      }} />
+      <Stack.Screen name="bill/index" options={{
+        title: "Despesas"
       }} />
       <Stack.Screen name="bill/[id]" options={{
         title: 'Detalhe da despesa',

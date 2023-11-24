@@ -1,3 +1,4 @@
+import theme from '@/constants/theme';
 import AppHeader from '@Components/AppHeader';
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
@@ -9,19 +10,18 @@ export default function AppLayout() {
     <Tabs screenOptions={{
       headerShown: true,
       tabBarShowLabel: false,
-      tabBarActiveTintColor: Colors.$iconDefaultLight,
-      tabBarInactiveTintColor: Colors.$iconPrimaryLight,
+      tabBarActiveTintColor: theme.colors.primary,
+      tabBarInactiveTintColor: theme.colors.onBackground,
       tabBarLabelPosition: 'below-icon',
       headerShadowVisible: true,
       tabBarHideOnKeyboard: true,
       headerTitleAlign: 'center',
       tabBarStyle: {
-        backgroundColor: Colors.$backgroundPrimaryHeavy
+        backgroundColor: theme.colors.background,
       },
       headerStyle: {
-        backgroundColor: Colors.$backgroundPrimaryHeavy
+        backgroundColor: theme.colors.primary,
       },
-      headerTintColor: 'white'
     }}>
       <Tabs.Screen name='(home)' options={{ 
         title: 'Home',

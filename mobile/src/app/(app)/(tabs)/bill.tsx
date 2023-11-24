@@ -1,12 +1,8 @@
-import signIn from '@/app/(auth)/sign-in';
-import { useSession } from '@/auth/context';
 import { useCreateBill } from '@/bff/queries/bill';
-import ScreenContainer from '@Components/ScreenContainer';
-import { FontAwesome } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import ScreenContent from '@Components/ScreenContent';
 import { useFormik } from 'formik';
 import { Alert } from 'react-native';
-import { Button, Colors, LoaderScreen, Text, TextField, View } from 'react-native-ui-lib';
+import { Button, LoaderScreen, TextField, View } from 'react-native-ui-lib';
 
 export default function Settings() {
   const { mutateAsync } = useCreateBill()
@@ -25,7 +21,7 @@ export default function Settings() {
   })
   return <LoaderScreen message={'Message goes here'}/>
   return (
-    <ScreenContainer centerV>
+    <ScreenContent>
       <View>
         <TextField
           onChangeText={handleChange('name')}
@@ -54,6 +50,6 @@ export default function Settings() {
         />
 
       </View>
-    </ScreenContainer>
+    </ScreenContent>
   );
 }
