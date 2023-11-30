@@ -1,22 +1,18 @@
 import { SessionProvider } from '@/auth/context';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '@/config/query-client';
+import theme from '@/constants/theme';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useFonts } from 'expo-font';
 import { Slot, SplashScreen } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { Colors, ThemeManager } from 'react-native-ui-lib';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Platform, View } from 'react-native';
-import { queryClient } from '@/config/query-client';
+import { Platform } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
-import theme from '@/constants/theme';
-require('react-native-ui-lib/config').setConfig({ appScheme: 'default' });
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
-Colors.loadColors({
-  error: '#ff2442',
-  success: '#00CD8B',
-  text: '#00CD8B',
-});
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -60,11 +56,15 @@ function MainLayout() {
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <PaperProvider theme={theme}>
-          <StatusBar backgroundColor={Colors.$backgroundPrimaryHeavy} style='light' animated />
-          <Slot />
-          {Platform.OS === 'web' && (
-            <ReactQueryDevtools client={queryClient} position='right' buttonPosition='bottom-right' />
-          )}
+          <ActionSheetProvider>
+            <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+              <Slot />
+              <StatusBar backgroundColor={theme.colors.primary} networkActivityIndicatorVisible hideTransitionAnimation='fade' translucent={false} style='dark' animated />
+              {Platform.OS === 'web' && (
+                <ReactQueryDevtools client={queryClient} position='right' buttonPosition='bottom-right' />
+              )}
+            </SafeAreaProvider>
+          </ActionSheetProvider>
         </PaperProvider>
       </QueryClientProvider>
     </SessionProvider>

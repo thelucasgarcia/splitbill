@@ -1,24 +1,26 @@
-import { BillResponse } from '@/bff/schemas/bill'
-import { useRouter } from 'expo-router'
-import { Card, List, Text } from 'react-native-paper';
-import { ListItem } from 'react-native-ui-lib'
+import { BillResponse } from '@/bff/schemas/bill';
+import { formatCurrency, formatDate } from '@/hooks/useFormat';
+import Row from '@Components/Grid/Row';
+import { Link } from 'expo-router';
+import { Card } from 'react-native-paper';
+
 
 
 export function BillItem({ item }: { item: BillResponse }) {
-  const router = useRouter();
-
   return (
-    <Card onPress={() => { router.push(`/bill/${item.id}`) }}>
-      <Card.Content style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-      <List.Item
-        title={item.name}
-        description={Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(item.createdAt))}
-      />
-      <List.Item
-        title={Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.total || 0)}
-        description={`${item.members.length} participantes`}
-      />
-      </Card.Content>
-    </Card>
+    <Link key={item.id} href={`/bill/${item.id}`} asChild>
+      <Card>
+        <Card.Content>
+          <Row>
+            <Row.Title>{item.name}</Row.Title>
+            <Row.Title>{formatCurrency(item.total)}</Row.Title>
+          </Row>
+          <Row>
+            <Row.Description>{formatDate(item.createdAt)}</Row.Description>
+            <Row.Description>{`${item.members.length} participantes`}</Row.Description>
+          </Row>
+        </Card.Content>
+      </Card>
+    </Link>
   )
 }

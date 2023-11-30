@@ -1,13 +1,13 @@
 import { BaseApi } from '../base-api';
 import { QueryGetOneUserArgs, UserResponse } from '../schemas/user';
 export class User extends BaseApi {
-  override baseURL = 'https://jsonplaceholder.typicode.com'
+  override baseURL = 'https://splitbill-one.vercel.app/v1/users'
 
-  getAllUsers(params: QueryGetOneUserArgs) {
-    return this.get<UserResponse[]>(`/users`)
+  getAllUsers() {
+    return this.get<UserResponse[]>(`/`)
   }
 
-  getOneUsers({ id }: QueryGetOneUserArgs) {
-    return this.get<UserResponse>(`/users/${id}`)
+  getOneUser({ id }: QueryGetOneUserArgs) {
+    return this.get<UserResponse>(`/${id}`)
   }
 }

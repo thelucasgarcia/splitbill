@@ -1,5 +1,6 @@
+import theme from '@/constants/theme';
+import { Text } from 'react-native';
 import { Platform, Pressable, StyleSheet, TouchableOpacityProps } from 'react-native';
-import { Colors, Text } from 'react-native-ui-lib';
 
 interface Props extends TouchableOpacityProps {
   color?: string
@@ -10,8 +11,8 @@ interface Props extends TouchableOpacityProps {
 export default function HeaderButton({ color, text, icon, ...props }: Props) {
   return (
     <Pressable {...props} style={{ ...styles.button }} >
-      { text && (
-        <Text style={{ ...styles.text, color: props.disabled ? Colors.$textDisabled : color }}>{text}</Text>
+      {text && (
+        <Text style={{ ...styles.text, color: props.disabled ? theme.colors.outline : color }}>{text}</Text>
       )}
       {icon && icon}
     </Pressable>

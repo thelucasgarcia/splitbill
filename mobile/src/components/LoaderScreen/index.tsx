@@ -61,11 +61,12 @@ export default function LoaderScreen(props: LoaderScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: theme.colors.background,
   },
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: theme.colors.primaryContainer,
+    backgroundColor: theme.colors.background,
     zIndex: 100
   },
   message: {

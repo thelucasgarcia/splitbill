@@ -1,7 +1,7 @@
 import { useSession } from '@/auth/context';
 import HeaderButton from '@Components/HeaderButton';
+import LoaderScreen from '@Components/LoaderScreen';
 import { Redirect, Stack, router } from 'expo-router';
-import { Colors, LoaderScreen } from 'react-native-ui-lib';
 
 export default function BillLayout() {
   const { session, isLoading } = useSession();
@@ -16,7 +16,7 @@ export default function BillLayout() {
   if (!session) {
     // On web, static rendering will stop here as the user is not authenticated
     // in the headless Node process that the pages are rendered in.
-    return <Redirect href="/sign-in" />;
+    return <Redirect href="/" />;
   }
 
   return (
@@ -28,6 +28,7 @@ export default function BillLayout() {
             return <HeaderButton color={tintColor} text="Voltar" onPress={() => router.back()} />
           }
         }),
+        headerLargeTitle: true, 
       }}>
         <Stack.Screen name="(tabs)" options={{
           headerShown: false,

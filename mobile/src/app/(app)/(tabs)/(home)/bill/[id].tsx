@@ -1,14 +1,18 @@
 import { useBill } from '@/bff/queries/bill';
+import { formatCurrency, formatDate } from '@/hooks/useFormat';
 import HeaderButton from '@Components/HeaderButton';
+import LoaderScreen from '@Components/LoaderScreen';
 import ScreenContent from '@Components/ScreenContent';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
-import { Card, Colors, ListItem, LoaderScreen, Text } from 'react-native-ui-lib';
+import { FlatList, RefreshControl, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Avatar, Card, Divider, List, Text } from 'react-native-paper';
 
 export default function BillDetails() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const { data, isLoading, isSuccess, error } = useBill({ id })
+  const { data, isLoading, isSuccess, error, isRefetching, refetch } = useBill({ id })
+
   if (isLoading) {
-    return <LoaderScreen message='Carregando Despesa' backgroundColor={Colors.$backgroundDark} />
+    return <LoaderScreen message='Carregando Despesa' />
   }
 
   if (isSuccess) {
@@ -20,34 +24,56 @@ export default function BillDetails() {
           )
         }} />
 
-        <Card disabled>
-          <ListItem padding-10 spread>
-            <ListItem.Part middle column containerStyle={{ justifyContent: 'space-evenly' }}>
-              <ListItem.Part >
-                <Text text70BO>{data.name}</Text>
-                <Text text70>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.total || 0)}</Text>
-              </ListItem.Part>
+        <ScrollView
+          indicatorStyle='default'
 
-              <ListItem.Part>
-                <Text
-                  text90L
-                  grey40
-                  numberOfLines={1}
-                >{Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(data.createdAt))}</Text>
+          refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}>
+          <Card>
+            <Card.Title
+              title={data.name}
+              titleVariant='headlineSmall'
 
-                <Text text90L grey40 numberOfLines={1}>
-                  {data.members.length} participantes
-                </Text>
-              </ListItem.Part>
-            </ListItem.Part>
-          </ListItem>
-        </Card>
-        <Text>{data?.name || '123'}</Text>
-        <Text>{data?.description || '123'}</Text>
-        <Text>{data?.total || '123'}</Text>
-        <Text>{data?.user.name || '123'}</Text>
-        <Text>{data?.createdAt || '123'}</Text>
-        <Text onPress={() => router.back()}>voltar</Text>
+              subtitle={formatDate(data.createdAt)}
+              subtitleVariant='bodySmall'
+              right={({ size }) => <Text style={{ paddingHorizontal: size / 2 }} variant='headlineMedium'>{formatCurrency(data.total)}</Text>}
+            />
+            <Divider />
+            <Card.Content>
+              <View style={{ paddingVertical: 10 }}>
+                <Text>{data.description}</Text>
+              </View>
+            </Card.Content>
+
+          </Card>
+          {data.members && (
+            <List.Section>
+              <List.Subheader>Participantes</List.Subheader>
+              {data.members.map(item => (
+                <List.Item
+                  key={item.id}
+                  title={`${item.member.name}`}
+                />
+              ))}
+            </List.Section>
+          )}
+          {data.items && (
+            <List.Section>
+              <List.Subheader>Despesas</List.Subheader>
+              {data.items.map(item => (
+                <List.Item
+                  key={item.id}
+                  title={`${item.name} x ${item.quantity}`}
+                  description={`${formatCurrency(item.price)} und`}
+                  right={({ style }) => (
+                    <View style={{ ...style }}>
+                      <Text style={{ textAlign: 'right' }}>{formatCurrency(item.price * item.quantity)}</Text>
+                    </View>
+                  )}
+                />
+              ))}
+            </List.Section>
+          )}
+        </ScrollView>
       </ScreenContent>
     )
   }

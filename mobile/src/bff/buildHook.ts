@@ -1,11 +1,13 @@
 import { queryClient } from '@/config/query-client';
-import { InvalidateQueryFilters, MutationFunction, QueryKey, UseInfiniteQueryOptions, UseQueryOptions, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { InvalidateQueryFilters, MutationFunction, QueryKey, UseInfiniteQueryOptions, UseMutationOptions, UseQueryOptions, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { QueryKeyType } from './types/queryKeys';
 
-function useBuildQueryHook<TArgs = unknown, TData = unknown>(queryKey: QueryKey, queryFn: (args: TArgs) => Promise<TData>) {
-  return (variables: TArgs, options?: UseQueryOptions<TData>) => useQuery({
-    queryKey: [queryKey, variables],
-    queryFn: () => queryFn(variables),
+
+function buildQueryHook<TArgs = unknown, TData = unknown>(queryKey: QueryKeyType, queryFn: (args: TArgs) => Promise<TData>) {
+  return (variables?: TArgs, options?: UseQueryOptions<TData>) => useQuery({
+    queryKey: variables ? [queryKey, variables] : [queryKey],
+    queryFn: () => queryFn(variables as TArgs),
     ...options,
   })
 }
@@ -15,7 +17,7 @@ interface PageParam {
   prevCursor: number
 }
 
-function useBuildInfiniteQueryHook<TArgs = unknown, TData extends PageParam = any>(queryKey: QueryKey, queryFn: (args: TArgs) => Promise<TData>) {
+function buildInfiniteQueryHook<TArgs = unknown, TData extends PageParam = any>(queryKey: QueryKey, queryFn: (args: TArgs) => Promise<TData>) {
   return (variables: TArgs, options?: UseInfiniteQueryOptions<TData>) => useInfiniteQuery({
     queryKey: variables ? [queryKey, variables] : [queryKey],
     queryFn: ({ pageParam }) => queryFn({ ...variables, page: pageParam }),
@@ -25,15 +27,17 @@ function useBuildInfiniteQueryHook<TArgs = unknown, TData extends PageParam = an
   })
 }
 
-function useBuildMutationHook<TData, TVariables>(queryKey: QueryKey, mutationFn?: MutationFunction<TData, TVariables>) {
-  return () => {
+function buildMutationHook<TData, TVariables>(queryKey: QueryKeyType, mutationFn?: MutationFunction<TData, TVariables>) {
+  return (options?: UseMutationOptions<TData, AxiosError | Error, TVariables>) => {
     const mutation = useMutation<TData, AxiosError | Error, TVariables>({
+      mutationKey: [queryKey],
       mutationFn: mutationFn,
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey
+          queryKey: [queryKey]
         });
       },
+      ...options
     });
 
     return {
@@ -42,9 +46,11 @@ function useBuildMutationHook<TData, TVariables>(queryKey: QueryKey, mutationFn?
         const queryKeys = args.map((key) => queryClient.invalidateQueries(key))
         return Promise.all(queryKeys)
       },
+      cancelQueries: (keys: QueryKeyType[]) => {
+        return queryClient.cancelQueries({ queryKey: keys }, { silent: true})
+      },
     }
   }
 }
 
-export { useBuildInfiniteQueryHook as buildInfiniteQueryHook, useBuildMutationHook as buildMutationHook, useBuildQueryHook as buildQueryHook };
-
+export { buildQueryHook, buildInfiniteQueryHook, buildMutationHook };

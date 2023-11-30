@@ -1,19 +1,14 @@
+import theme from '@/constants/theme';
 import React, { PropsWithChildren } from 'react';
-import { View } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Colors, ViewProps } from 'react-native-ui-lib';
+import { SafeAreaView, View, ViewProps } from 'react-native';
 
-const ScreenContent = (({ children }: PropsWithChildren) => {
-  const theme = useTheme()
+const ScreenContent = (({ children, ...props }: PropsWithChildren<ViewProps>) => {
   return (
-    <SafeAreaProvider>
-      <View style={{ flex: 1, backgroundColor: theme.colors.scrim }}>
-        <View style={{ flex: 1, padding: 20 }}>
-          {children}
-        </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }} >
+      <View {...props} style={[{ flex: 1, padding: 10, paddingTop: 20, paddingBottom: 0 }, props.style]} >
+        {children}
       </View>
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 })
 

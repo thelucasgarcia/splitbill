@@ -1,5 +1,8 @@
 import { dataSources } from '../data-sources'
 
+export interface QueryGetAllBillArgs {
+  search: string
+}
 export interface BillResponse {
   id: string
   name: string
@@ -10,7 +13,16 @@ export interface BillResponse {
   }
   userId: string
   total: number
-  items: any[]
+  items: {
+      id: string,
+      billId: string,
+      name: string,
+      quantity: number,
+      price: number,
+      type: "EQUALLY" | "PERCENTAGE",
+      createdAt: Date,
+      updatedAt: Date
+  }[]
   members: {
     id: string
     billId: string
@@ -37,9 +49,10 @@ export interface MutationCreateBillArgs {
   tag?: string[]
 }
 
+
 export const resolvers = {
   Query: {
-    getAllBills: () => dataSources.bill.getAllBills(),
+    getAllBills: (params?: QueryGetAllBillArgs) => dataSources.bill.getAllBills(params),
     getOneBill: (params: QueryGetOneBillArgs) => dataSources.bill.getOneBill(params),
   },
   Mutation: {

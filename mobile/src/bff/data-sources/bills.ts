@@ -1,11 +1,16 @@
 import { BaseApi } from '../base-api';
-import { BillResponse, MutationCreateBillArgs, QueryGetOneBillArgs } from '../schemas/bill';
+import { BillResponse, MutationCreateBillArgs, QueryGetAllBillArgs, QueryGetOneBillArgs } from '../schemas/bill';
 
 export class Bill extends BaseApi {
   override baseURL = 'https://splitbill-one.vercel.app/v1/bill'
 
-  getAllBills() {
-    return this.get<BillResponse[]>(`/`)
+  async getAllBills(params?: QueryGetAllBillArgs) {
+    const response = await this.get<BillResponse[]>(`/`, { params })
+    if (params?.search) {
+      const filtered = response.filter(el => el.name.includes(params.search))
+      return filtered
+    }
+    return response
   }
 
   getOneBill({ id }: QueryGetOneBillArgs) {

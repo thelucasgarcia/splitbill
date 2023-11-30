@@ -1,7 +1,6 @@
 import { getToken, setStorageItemAsync } from '@/auth/useStorageState';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 
-
 export class RestApi {
   protected baseURL?: string;
   private instance = axios.create({

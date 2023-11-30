@@ -1,8 +1,6 @@
 import theme from '@/constants/theme';
-import AppHeader from '@Components/AppHeader';
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { Colors } from 'react-native-ui-lib';
 
 export default function AppLayout() {
    // This layout can be deferred because it's not the root layout.
@@ -16,8 +14,11 @@ export default function AppLayout() {
       headerShadowVisible: true,
       tabBarHideOnKeyboard: true,
       headerTitleAlign: 'center',
+      headerLeftLabelVisible: true,
       tabBarStyle: {
-        backgroundColor: theme.colors.background,
+        backgroundColor: theme.colors.elevation.level1,
+        borderWidth: 0,
+        borderTopWidth: 0,
       },
       headerStyle: {
         backgroundColor: theme.colors.primary,
@@ -40,7 +41,9 @@ export default function AppLayout() {
         title: 'Criar Despesa',
         tabBarIcon: (props) => <FontAwesome name='calculator' { ...props } />,
       }} />
-      <Tabs.Screen name='settings' options={{ 
+      <Tabs.Screen name='(settings)' options={{ 
+        title: 'Configurações',
+        headerShown: false,
         tabBarIcon: (props) => <FontAwesome name='cog' { ...props } />
       }} />
     </Tabs>

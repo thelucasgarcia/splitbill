@@ -1,38 +1,25 @@
+import Row from '@Components/Grid/Row';
+import ScreenContent from '@Components/ScreenContent';
 import { Link, Stack } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
+import { Button, Text } from 'react-native-paper';
 
 export default function NotFoundScreen() {
   return (
-    <>
-      <Stack.Screen options={{ title: 'Oops!', headerShown: false }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>Error 404</Text>
+    <ScreenContent>
+      <Stack.Screen options={{ title: 'Oops!' }} />
+      <Row justifyContent='center' alignItems='center' flexDirection='column'>
+        <Image source={require('@Assets/images/404.png')} style={{ resizeMode: 'contain', width: 400, height: 400 }} />
+        <Row flexDirection='column' gap={20}>
 
-        <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
-        </Link>
-      </View>
-    </>
+          <Text variant='displayMedium' style={{ fontWeight: 'bold' }}>404</Text>
+          <Text variant='headlineSmall' style={{ fontWeight: 'bold' }}>Oops, Página não encontrada</Text>
+          <Text style={{ textAlign: 'center' }}>Lamentamos, mas a página que você solicitou não foi encontrada. Por favor, Volte para a página inicial!</Text>
+          <Link href="/" asChild>
+            <Button mode='contained-tonal'>Ir para o ínicio</Button>
+          </Link>
+        </Row>
+      </Row>
+    </ScreenContent>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-});

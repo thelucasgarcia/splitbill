@@ -1,13 +1,17 @@
 import { useSession } from '@/auth/context';
-import { Redirect, Stack, router } from 'expo-router';
-import { useEffect } from 'react';
-import { Text } from 'react-native-ui-lib';
+import LoaderScreen from '@Components/LoaderScreen';
+import { Redirect, Stack } from 'expo-router';
+
+export const unstable_settings = {
+  // Ensure that reloading on `/modal` keeps a back button present.
+  initialRouteName: 'index',
+};
 
 export default function RootLayout() {
   const { isLoading, session } = useSession()
   // You can keep the splash screen open, or render a loading screen like we do here.
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <LoaderScreen />;
   }
 
   // Only require authentication within the (app) group's layout as users
@@ -15,13 +19,16 @@ export default function RootLayout() {
   if (session) {
     // On web, static rendering will stop here as the user is not authenticated
     // in the headless Node process that the pages are rendered in.
-    return <Redirect href="/" />;
+    return <Redirect href="/(app)/(tabs)/(home)" />;
   }
 
   return (
-      <Stack>
+      <Stack screenOptions={{
+        headerTitleAlign: 'center',
+      }}>
+        <Stack.Screen name="index" options={{ title: 'SplitBill logo', headerTransparent: true}} />
         <Stack.Screen name="sign-in" options={{ title: 'Login', headerShown: false }} />
-        <Stack.Screen name="sign-up" options={{ title: 'Register' }} />
+        <Stack.Screen name="sign-up" options={{ title: '', headerTransparent: true, headerTintColor: 'white'}} />
       </Stack>
   );
 }

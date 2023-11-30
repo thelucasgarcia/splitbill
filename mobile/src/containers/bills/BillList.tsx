@@ -1,13 +1,14 @@
 import { useBills } from '@/bff/queries/bill'
 import { Link } from 'expo-router'
-import { FlatList, View } from 'react-native'
+import { FlatList, RefreshControl, View } from 'react-native'
 
 import { BillItem } from './BillItem'
 import LoaderScreen from '@Components/LoaderScreen'
-import { Text } from 'react-native-paper'
+import { Button, Text } from 'react-native-paper'
+import Row from '@Components/Grid/Row'
 
 export function BillList() {
-  const { data, error, isLoading, isRefetching, refetch } = useBills({})
+  const { data, error, isLoading, isRefetching, refetch } = useBills()
 
   if (isLoading) {
     return <LoaderScreen message='Carregando Despesas...' />
@@ -23,15 +24,12 @@ export function BillList() {
       refreshing={isRefetching}
       onRefresh={refetch}
       contentContainerStyle={{ gap: 10 }}
-      stickyHeaderHiddenOnScroll={false}
       ListHeaderComponent={() => {
         return (
-          <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row'}}>
-            <Text variant='titleLarge'>Bills</Text>
-            <Link href={'/(app)/(tabs)/bill'}>
-              <Text>ver mais</Text>
-            </Link>
-          </View>
+          <Row>
+            <Row.Title variant='titleLarge'>Bills</Row.Title>
+            <Link href={'/(app)/(tabs)/bill'} asChild><Button>ver mais</Button></Link>
+          </Row>
         )
       }}
       renderItem={({ item, index }) => <BillItem key={item.id + index} item={item} />}

@@ -5,15 +5,17 @@ export interface QueryGetOneUserArgs {
 }
 
 export interface UserResponse {
-  id: number
+  id: string
   name: string
+  picture: string | null
   username: string
   email: string
-  address: Address
-  phone: string
-  website: string
-  company: Company
+  cpf: string | null
+  phone: string | null
+  createdAt: string
+  updatedAt: string
 }
+
 
 export interface UserRequest {
   id: number
@@ -47,7 +49,8 @@ interface Company {
 
 export const resolvers = {
   Query: {
-    getUsers: (params: QueryGetOneUserArgs) => dataSources.user.getAllUsers(params)
+    getUsers: () => dataSources.user.getAllUsers(),
+    getUser: (params: QueryGetOneUserArgs) => dataSources.user.getOneUser(params)
   },
   Mutation: {},
 }

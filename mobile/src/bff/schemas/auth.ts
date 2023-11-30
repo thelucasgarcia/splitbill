@@ -14,12 +14,29 @@ export interface AuthTokenResponse {
   refresh_token: string
 }
 
+export interface AttemptRequest {
+  username?: string
+  email?: string
+  phone?: string
+  cpf?: string
+}
+export interface AttemptResponse {
+  username: boolean
+}
+
+export interface AuthSignUpRequest {
+  name: string,
+  username: string,
+  email: string,
+  password: string
+}
 
 export const resolvers = {
-  Query: {
-    
+  Query: { 
   },
   Mutation: {
     signIn: (params: AuthSignInRequest) => dataSources.auth.signIn(params),
+    signUp: (params: AuthSignUpRequest) => dataSources.auth.signUp(params),
+    attempt: (params: AttemptRequest) => dataSources.auth.attempt(params)
   },
 }

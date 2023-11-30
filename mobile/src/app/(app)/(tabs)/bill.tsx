@@ -1,8 +1,7 @@
 import { useCreateBill } from '@/bff/queries/bill';
-import ScreenContent from '@Components/ScreenContent';
+import LoaderScreen from '@Components/LoaderScreen';
 import { useFormik } from 'formik';
 import { Alert } from 'react-native';
-import { Button, LoaderScreen, TextField, View } from 'react-native-ui-lib';
 
 export default function Settings() {
   const { mutateAsync } = useCreateBill()
@@ -20,36 +19,36 @@ export default function Settings() {
     }
   })
   return <LoaderScreen message={'Message goes here'}/>
-  return (
-    <ScreenContent>
-      <View>
-        <TextField
-          onChangeText={handleChange('name')}
-          onBlur={handleBlur('name')}
-          value={values.name}
-          label='Nome da despesa'
-          placeholder={'Barzinho'}
-          enableErrors
-          showCharCounter
-        />
-        <TextField
-          onChangeText={handleChange('description')}
-          onBlur={handleBlur('description')}
-          value={values.description}
-          label="Descrição"
-          enableErrors
-          showCharCounter
-        />
+  // return (
+  //   <ScreenContent>
+  //     <View>
+  //       <TextField
+  //         onChangeText={handleChange('name')}
+  //         onBlur={handleBlur('name')}
+  //         value={values.name}
+  //         label='Nome da despesa'
+  //         placeholder={'Barzinho'}
+  //         enableErrors
+  //         showCharCounter
+  //       />
+  //       <TextField
+  //         onChangeText={handleChange('description')}
+  //         onBlur={handleBlur('description')}
+  //         value={values.description}
+  //         label="Descrição"
+  //         enableErrors
+  //         showCharCounter
+  //       />
 
-        <Button
-          marginT-20
-          onPress={() => handleSubmit()}
-          label={isSubmitting ? "Loading ..." : "Submit"}
-          fullWidth
-          disabled={!isValid}
-        />
+  //       <Button
+  //         marginT-20
+  //         onPress={() => handleSubmit()}
+  //         label={isSubmitting ? "Loading ..." : "Submit"}
+  //         fullWidth
+  //         disabled={!isValid}
+  //       />
 
-      </View>
-    </ScreenContent>
-  );
+  //     </View>
+  //   </ScreenContent>
+  // );
 }

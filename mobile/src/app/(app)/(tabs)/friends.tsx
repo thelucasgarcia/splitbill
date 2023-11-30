@@ -1,29 +1,13 @@
-import { useCreateBill } from '@/bff/queries/bill';
 import ScreenContent from '@Components/ScreenContent';
-import { useFormik } from 'formik';
-import { Alert } from 'react-native';
-import { Text, View } from 'react-native-ui-lib';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 export default function Friends() {
-  const { mutateAsync } = useCreateBill()
-  const { handleChange, handleBlur, handleSubmit, isSubmitting, isValid, values } = useFormik({
-    initialValues: {
-      name: '',
-      description: '',
-      tags: []
-    },
-    onSubmit: (values) => {
-      return mutateAsync(values).catch(error => {
-        console.log(error)
-        Alert.alert(error.message)
-      })
-    }
-  })
- 
+   
   return (
-    <ScreenContent center>
+    <ScreenContent>
       <View>
-        <Text white>Convidar amigos</Text>
+        <Text>Convidar amigos</Text>
       </View>
     </ScreenContent>
   );
